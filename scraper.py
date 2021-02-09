@@ -13,11 +13,27 @@ class ConcertScraper:
         self.timedelta = datetime.timedelta(hours=1, minutes=30)
 
     @abc.abstractmethod
-    def _get_event(self, url) -> dict:
+    def _get_event(self, url: str) -> dict:
+        """
+
+        Parameters
+        ----------
+        url
+
+        Returns
+        -------
+        dict
+            {'start': {'dateTime': `datetime.datetime()`,
+                       'timeZone': `str`},
+             'end': <same>}
+
+        """
         pass
 
     def get_event(self, url: str) -> dict:
         """Create calendar-ready event from info in url.
+
+        This is a wrapper to add end time autimatically as startTime + 1.5 hrs.
 
         Parameters
         ----------
@@ -39,22 +55,23 @@ class ConcertScraper:
         return evt
 
     @abc.abstractmethod
-    def get_event_schedule(self):
-        """
+    def get_event_schedule(self) -> list:
+        """Collect links to all events present at a webpage.
 
-        Returns
-        -------
-
+        On each link it must be possible to run `self.get_event()`.
         """
         pass
 
 
 class WigmoreHallScraper(ConcertScraper):
 
-    def get_event(self, url: str) -> dict:
+    def _get_event(self, url: str) -> dict:
 
-        #TODO: use selenium here
+        # TODO: bs4 doesn't work; use selenium or whatever
 
+        pass
+
+    def get_event_schedule(self) -> list:
         pass
 
 
