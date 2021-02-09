@@ -2,7 +2,31 @@ import unittest
 import datetime
 import pytz
 
-from ..scraper import (WigmoreHallScraper, PSCMScraper)
+from ..scraper import (WigmoreHallScraper, PSCMScraper, ZeneakademiaScraper)
+
+
+# TODO: finish setUpClass
+# class ScraperTestCase(unittest.TestCase):
+#
+#     @classmethod
+#     def setUpClass(cls, scraper, tz, start_time, summary) -> None:
+#         """
+#
+#         Parameters
+#         ----------
+#         scraper
+#         tz
+#         start_time
+#         summary
+#
+#         Returns
+#         -------
+#
+#         """
+#         cls.scraper = scraper
+#         cls.tz = tz
+#         cls.startTime = tz.localize(start_time)
+#         cls.summary = summary
 
 
 @unittest.skip
@@ -45,3 +69,28 @@ class TestPSCMScraper(unittest.TestCase):
         self.assertEqual(res_event["start"],
                          dict(dateTime=self.startTime.isoformat(),
                               timeZone=self.tz.zone))
+
+
+class TestZeneakademiaScraper(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.scraper = ZeneakademiaScraper()
+        self.tz = pytz.timezone("Europe/Budapest")
+        self.startTime = \
+            self.tz.localize(datetime.datetime(2021, 2, 9, 19, 30))
+        self.summary = "Cziffra's Heritage by Liszt Academy"
+
+    # @unittest.skip
+    def test_get_event(self):
+        url = "https://zeneakademia.hu/all-programs/" \
+              "2021-02-09-cziffras-heritage-9753"
+        res_event = self.scraper.get_event(url)
+
+        self.assertEqual(res_event["summary"], self.summary)
+        self.assertEqual(res_event["start"],
+                         dict(dateTime=self.startTime.isoformat(),
+                              timeZone=self.tz.zone))
+
+    def test_get_event_schedule(self):
+        res = self.scraper.get_event_schedule()
+        self.assertGreater(len(res), 0)

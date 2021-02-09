@@ -1,16 +1,23 @@
+import abc
 from bs4 import BeautifulSoup
 import requests
 import datetime
 import pytz
+import re
 
 
 class ConcertScraper:
 
     def __init__(self, tz):
         self.tz = tz
+        self.timedelta = datetime.timedelta(hours=1, minutes=30)
+
+    @abc.abstractmethod
+    def _get_event(self, url) -> dict:
+        pass
 
     def get_event(self, url: str) -> dict:
-        """
+        """Create calendar-ready event from info in url.
 
         Parameters
         ----------
@@ -21,9 +28,25 @@ class ConcertScraper:
         dict
 
         """
-        pass
+        evt = self._get_event(url)
+        evt["end"] = {
+            'dateTime': (evt["start"]["dateTime"] + self.timedelta) \
+                .isoformat(),
+            'timeZone': evt["start"]["timeZone"],
+        }
+        evt["start"]["dateTime"] = evt["start"]["dateTime"].isoformat()
 
-    # TODO: decorators for event duration
+        return evt
+
+    @abc.abstractmethod
+    def get_event_schedule(self):
+        """
+
+        Returns
+        -------
+
+        """
+        pass
 
 
 class WigmoreHallScraper(ConcertScraper):
@@ -39,7 +62,7 @@ class PSCMScraper(ConcertScraper):
     def __init__(self):
         super(PSCMScraper, self).__init__(pytz.timezone("America/New_York"))
 
-    def get_event(self, url: str) -> dict:
+    def _get_event(self, url: str) -> dict:
 
         # parse, create soup
         # TODO: relocate to parent
@@ -47,7 +70,7 @@ class PSCMScraper(ConcertScraper):
         soup = BeautifulSoup(page.content, "html.parser")
 
         # info, in the title of the page
-        summ = soup.title.text
+        info = soup.title.text + " by PSCM"
 
         # start date
         evt_dt = soup.find("span", itemprop="startDate")
@@ -58,10 +81,68 @@ class PSCMScraper(ConcertScraper):
         # return
         res = {
             "start": {
-                "dateTime": evt_dt.isoformat(),
+                "dateTime": evt_dt,
                 "timeZone": self.tz.zone
             },
-            'summary': summ,
+            'summary': info,
+            'description': url,
+        }
+
+        return res
+
+    def get_event_schedule(self):
+        pass
+
+
+class ZeneakademiaScraper(ConcertScraper):
+    def __init__(self):
+        super(ZeneakademiaScraper, self)\
+            .__init__(pytz.timezone("Europe/Budapest"))
+
+    def get_event_schedule(self):
+        url = "https://zeneakademia.hu/streaming"
+
+        # get content, create soup
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        # links are relative (!) hrefs in articles
+        events = soup.find_all("article", class_="event soldout")
+
+        res = list()
+        for e_ in events:
+            href = e_.find_all('a', href=True)[-1]["href"]
+            res.append("https://zeneakademia.hu" + href)
+
+        return res
+
+    def _get_event(self, url: str) -> dict:
+        # parse, create soup
+        # TODO: relocate to parent
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        # start date
+        regexpr = "[0-9]+ [A-Za-z]+ [0-9]{4}, [0-9]+[.][0-9]{2}"
+        evt_dt_tag = soup.find("h2", text=re.compile(regexpr))
+        evt_dt = evt_dt_tag.text.split("-")[0]
+        evt_dt = datetime.datetime.strptime(evt_dt, "%d %B %Y, %H.%M")
+        evt_dt = self.tz.localize(evt_dt)
+
+        # info, in the sibling of the date's grand-parent
+        info_tag = evt_dt_tag.find_parent().find_parent().find_next_sibling()
+        info = info_tag.text
+
+        if "Liszt Academy" not in info:
+            info += " by Liszt Academy"
+
+        # return
+        res = {
+            "start": {
+                "dateTime": evt_dt,
+                "timeZone": self.tz.zone
+            },
+            'summary': info,
             'description': url,
         }
 
