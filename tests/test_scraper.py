@@ -2,7 +2,7 @@ import unittest
 import datetime
 import pytz
 
-from ..scraper import (WigmoreHallScraper, PSCMScraper, ZeneakademiaScraper)
+from ..scraper import (WigmoreHallScraper, PCMSScraper, ZeneakademiaScraper)
 
 
 # TODO: finish setUpClass
@@ -48,10 +48,10 @@ class TestWigmoreHallScraper(unittest.TestCase):
                                                   timeZone=self.tz.zone))
 
 
-class TestPSCMScraper(unittest.TestCase):
+class TestPCMSScraper(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.scraper = PSCMScraper()
+        self.scraper = PCMSScraper()
         self.tz = pytz.timezone("America/New_York")
         self.startTime = \
             self.tz.localize(datetime.datetime(2021, 2, 10, 18))
@@ -60,6 +60,7 @@ class TestPSCMScraper(unittest.TestCase):
                        "Gloria Chien, piano - " \
                        "Philadelphia Chamber Music Society"
 
+    # @unittest.skip
     def test_get_event(self):
         url = "https://www.pcmsconcerts.org/concerts/" \
               "mcgill-pajaro-van-de-stadt-chien/"
@@ -70,7 +71,12 @@ class TestPSCMScraper(unittest.TestCase):
                          dict(dateTime=self.startTime.isoformat(),
                               timeZone=self.tz.zone))
 
+    def test_get_event_schedule(self):
+        res = self.scraper.get_event_schedule()
+        self.assertGreater(len(res), 0)
 
+
+# @unittest.skip
 class TestZeneakademiaScraper(unittest.TestCase):
 
     def setUp(self) -> None:

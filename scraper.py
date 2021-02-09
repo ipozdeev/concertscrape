@@ -58,9 +58,9 @@ class WigmoreHallScraper(ConcertScraper):
         pass
 
 
-class PSCMScraper(ConcertScraper):
+class PCMSScraper(ConcertScraper):
     def __init__(self):
-        super(PSCMScraper, self).__init__(pytz.timezone("America/New_York"))
+        super(PCMSScraper, self).__init__(pytz.timezone("America/New_York"))
 
     def _get_event(self, url: str) -> dict:
 
@@ -70,7 +70,9 @@ class PSCMScraper(ConcertScraper):
         soup = BeautifulSoup(page.content, "html.parser")
 
         # info, in the title of the page
-        info = soup.title.text + " by PSCM"
+        info = soup.title.text
+        if "Philadelphia" not in info:
+            info += " by PCMS"
 
         # start date
         evt_dt = soup.find("span", itemprop="startDate")
@@ -91,7 +93,21 @@ class PSCMScraper(ConcertScraper):
         return res
 
     def get_event_schedule(self):
-        pass
+        url = "https://www.pcmsconcerts.org/concerts/livestreams/"
+
+        # get content, create soup
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        # events are in the grid of 3 columns
+        events = soup.find_all("div", class_="col-lg-4 col-md-6")
+
+        res = list()
+        for e_ in events:
+            href = e_.find('a', href=True)["href"]
+            res.append(href)
+
+        return res
 
 
 class ZeneakademiaScraper(ConcertScraper):
