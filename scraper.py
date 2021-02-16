@@ -151,7 +151,6 @@ class ZeneakademiaScraper(ConcertScraper):
 
     def _get_event(self, url: str) -> dict:
         # parse, create soup
-        # TODO: relocate to parent
         page = requests.get(url)
         soup = BeautifulSoup(page.content, "html.parser")
 
@@ -168,6 +167,108 @@ class ZeneakademiaScraper(ConcertScraper):
 
         if "Liszt Academy" not in info:
             info += " by Liszt Academy"
+
+        # return
+        res = {
+            "start": {
+                "dateTime": evt_dt,
+                "timeZone": self.tz.zone
+            },
+            'summary': info,
+            'description': url,
+        }
+
+        return res
+
+
+class AllaScalaScraper(ConcertScraper):
+    def __init__(self):
+        super(AllaScalaScraper, self).__init__(pytz.timezone("Europe/Rome"))
+
+    def _get_event(self, url: str) -> dict:
+        pass
+
+    def get_event_schedule(self) -> list:
+        url = "https://www.teatroallascala.org/en/scala-streaming.html"
+
+        # get content, create soup
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        # links are relative (!) hrefs in articles
+        def match_pattern(tag):
+            res_ = (tag.name == "article") & \
+                (tag.find("a", href=True) is not None)
+            return res_
+
+        events = soup.find_all(match_pattern)
+
+        res = list()
+        for e_ in events:
+            href = e_.a["href"]
+            res.append("https://www.teatroallascala.org/" + href)
+
+        return res
+
+
+class ConcertgebouwScraper(ConcertScraper):
+    def get_event_schedule(self) -> list:
+        url = "https://www.concertgebouworkest.nl/en/calendar"
+
+
+class MagyarorszagScraper(ConcertScraper):
+
+    def __init__(self):
+        super(MagyarorszagScraper, self)\
+            .__init__(pytz.timezone("Europe/Budapest"))
+
+    def _get_event(self, url: str) -> dict:
+        pass
+
+    def get_event_schedule(self) -> list:
+        url = "http://filharmonia.hu/virtualis-koncertterem-elo-kozvetitesek/"
+
+        # get content, create soup
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        end_h2 = "bbi koncertk"
+
+
+class MalmoScraper(ConcertScraper):
+    def __init__(self):
+        super(MalmoScraper, self).__init__(pytz.timezone("Europe/Stockholm"))
+
+    def get_event_schedule(self) -> list:
+        url = "https://malmolive.se/en/digital-concert-hall"
+
+        # get content, create soup
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        # links are relative (!) hrefs in articles
+        events = soup.find_all(
+            "div", class_="show-case article contextual-links-region"
+        )
+
+        res = list()
+        for e_ in events:
+            href = e_.find('a', href=True)["href"]
+            res.append("https://malmolive.se/" + href)
+
+        return res
+
+    def _get_event(self, url: str) -> dict:
+        # parse, create soup
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        evt_dt_txt = soup.find("span", class_="date-display-single").text
+        evt_dt = datetime.datetime.strptime(evt_dt_txt, "%H.%M %a %d %b %Y")
+        evt_dt = self.tz.localize(evt_dt)
+
+        # info,
+        info = re.sub("\t\r\n", "", soup.find("h1").text.strip())
 
         # return
         res = {
