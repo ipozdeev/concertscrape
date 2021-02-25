@@ -14,11 +14,15 @@ class ConcertScraper:
 
     @abc.abstractmethod
     def _get_event(self, url: str) -> dict:
-        """
+        """Collect info about one event under a url.
+
+        This needs to be implemented in any child class. The dict produced
+        is then forwarded to `.get_event()` where some additional formatting
+        is applied (e.g. the time zone info is added).
 
         Parameters
         ----------
-        url
+        url : str
 
         Returns
         -------
@@ -58,21 +62,27 @@ class ConcertScraper:
     def get_event_schedule(self) -> list:
         """Collect links to all events present at a webpage.
 
-        On each link it must be possible to run `self.get_event()`.
+        With each link it must be possible to run `self.get_event()`.
         """
         pass
 
 
 class WigmoreHallScraper(ConcertScraper):
 
+    def __init__(self):
+        super(WigmoreHallScraper, self).__init__(pytz.timezone("Europe/London"))
+
     def _get_event(self, url: str) -> dict:
 
         # TODO: bs4 doesn't work; use selenium or whatever
 
-        pass
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
 
     def get_event_schedule(self) -> list:
-        pass
+        url = "https://wigmore-hall.org.uk/watch-listen/forthcoming-live-streams"
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
 
 
 class PCMSScraper(ConcertScraper):
@@ -223,7 +233,47 @@ class MagyarorszagScraper(ConcertScraper):
             .__init__(pytz.timezone("Europe/Budapest"))
 
     def _get_event(self, url: str) -> dict:
-        pass
+        # parse, create soup
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        # date, somewhere in format 2021. 03. 04. 19:00
+        dt_tag = soup.find("div",
+                           class_="list_under_title program_under_title")
+        dt_str = re.search(
+            "([0-9]{4}[.] ?[0-9]{1,2}[.] ?[0-9]{1,2}[.] [0-9]{2}:[0-9]{2})",
+            dt_tag.text
+        ).group(0)
+        dt_str = re.sub(" ", "", dt_str)
+        dt = datetime.datetime.strptime(dt_str, "%Y.%m.%d.%H:%M")
+        dt = self.tz.localize(dt)
+
+        # info, in h2 at the top, possiblywrapped in (Magyar), ... - Online...
+        info_tag = soup.find("h2", class_="list_title program_title")
+        info = info_tag.text.strip("(Magyar) ")
+        info = re.sub(" – Online közvetítés", "", info)
+
+        # add venue info
+        if "Filharmónia Magyarország" not in info:
+            info += " by Filharmónia Magyarország"
+
+        # description: link to livestream under big yellow circle
+        link2live_tag = soup.find("a", href=True,
+                                  rel="attachment wp-att-16975")
+        link2live = link2live_tag["href"]
+        description = "\n\n".join((link2live, url))
+
+        # result
+        res = {
+            "start": {
+                "dateTime": dt,
+                "timeZone": self.tz.zone
+            },
+            'summary': info,
+            'description': description,
+        }
+
+        return res
 
     def get_event_schedule(self) -> list:
         url = "http://filharmonia.hu/virtualis-koncertterem-elo-kozvetitesek/"
@@ -232,7 +282,21 @@ class MagyarorszagScraper(ConcertScraper):
         page = requests.get(url)
         soup = BeautifulSoup(page.content, "html.parser")
 
-        end_h2 = "bbi koncertk"
+        content_tag = soup.find("div", class_="entry-content")
+
+        def match_pattern(tag):
+            res_ = re.match(re.compile(r"^[0-9]{4}[.] [a-záéúőóüö]+ [0-9]+"),
+                            tag.text)
+            return res_
+
+        a_tags = content_tag.find_all("a", href=True)
+
+        event_urls = list()
+        for a_tag in a_tags:
+            if a_tag.find(match_pattern) is not None:
+                event_urls.append(a_tag["href"])
+
+        return event_urls
 
 
 class MalmoScraper(ConcertScraper):
