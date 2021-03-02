@@ -196,7 +196,34 @@ class AllaScalaScraper(ConcertScraper):
         super(AllaScalaScraper, self).__init__(pytz.timezone("Europe/Rome"))
 
     def _get_event(self, url: str) -> dict:
-        pass
+        # parse, create soup
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        # summary
+        info_tag = soup.find("h1", class_="title")
+        info = info_tag.text
+        info += " at Teatro alla Scala" if "alla Scala" not in info else ""
+
+        # date is 5 March 2021 above, but time is like 6pm CET a bit lower
+        date_tag = soup.find("div", class_="brd-tl")
+        date = date_tag.text
+        time_tag = soup.find("div", class_="tab opened").find("p")
+        time = re.search("(at [0-9]+[ap]m CET)", time_tag.text).group()
+        dt = re.sub(u"\xa0", " ", f"{date} {time}")
+        dt = datetime.datetime.strptime(dt, "%d %B %Y at %I%p %Z")
+        dt = self.tz.localize(dt)
+
+        res = {
+            "start": {
+                "dateTime": dt,
+                "timeZone": self.tz.zone
+            },
+            'summary': info,
+            'description': url,
+        }
+
+        return res
 
     def get_event_schedule(self) -> list:
         url = "https://www.teatroallascala.org/en/scala-streaming.html"

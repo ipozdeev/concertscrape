@@ -32,7 +32,7 @@ from ..scraper import (WigmoreHallScraper, PCMSScraper, ZeneakademiaScraper,
 #         cls.summary = summary
 
 
-# @unittest.skip
+@unittest.skip
 class TestWigmoreHallScraper(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -110,20 +110,29 @@ class TestZeneakademiaScraper(unittest.TestCase):
         self.assertGreater(len(res), 0)
 
 
-@unittest.skip
+# @unittest.skip
 class TestAllaScalaScraper(TestCase):
     def setUp(self) -> None:
         self.scraper = AllaScalaScraper()
-        self.tz = pytz.timezone("Europe/Budapest")
+        self.tz = pytz.timezone("Europe/Rome")
         self.startTime = \
-            self.tz.localize(datetime.datetime(2021, 2, 9, 19, 30))
-        self.summary = "Cziffra's Heritage by Liszt Academy"
+            self.tz.localize(datetime.datetime(2021, 3, 5, 18, 0))
+        self.summary = "Myung-Whun Chung at Teatro alla Scala"
 
     def test__get_event(self):
-        self.fail()
+        url = "https://www.teatroallascala.org/en/season/2020-2021/concert/" \
+              "symphony-concert/myung-whun-chung.html"
+
+        res_event = self.scraper.get_event(url)
+
+        self.assertEqual(res_event["summary"], self.summary)
+        self.assertEqual(res_event["start"],
+                         dict(dateTime=self.startTime.isoformat(),
+                              timeZone=self.tz.zone))
 
     def test_get_event_schedule(self):
         res = self.scraper.get_event_schedule()
+        self.assertGreater(len(res), 0)
 
 
 @unittest.skip
