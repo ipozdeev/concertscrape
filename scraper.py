@@ -374,5 +374,80 @@ class MalmoScraper(ConcertScraper):
         return res
 
 
+class HrScraper(ConcertScraper):
+    def __init__(self):
+        super(HrScraper, self).__init__(pytz.timezone("Europe/Berlin"))
+
+    def get_event_schedule(self) -> list:
+        url = "https://www.hr-sinfonieorchester.de/livestreams/index.html"
+
+        # get content, create soup
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        # links are hrefs
+        events = soup\
+            .find("section", class_="c-teaserGroup -s100")\
+            .find_all("article", class_="c-teaser -alternative -s100 -v100")
+
+        res = list()
+        for e_ in events:
+            href = e_.find('a', href=True)["href"]
+            res.append(href)
+
+        # extra url in the header!
+        extra_link = soup.find("a", class_="link c-teaser__headlineLink")
+        res.append(extra_link["href"])
+
+        return res
+
+    def _get_event(self, url: str) -> dict:
+
+        e2g = {
+            "Januar": "January",
+            "Februar": "February",
+            "März": "March",
+            "April": "April",
+            "Mai": "May",
+            "Juni": "June",
+            "Juli": "July",
+            "August": "August",
+            "September": "September",
+            "Oktober": "October",
+            "November": "November",
+            "Dezember": "December"
+        }
+
+        # parse, create soup
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+
+        evt_info_tag = soup.find("h2", itemprop="headline")
+        evt_dt_tag = evt_info_tag.find("span")
+        evt_summary = evt_dt_tag.find_next_sibling("span")
+        evt_summary = evt_summary.text
+        evt_dt = evt_dt_tag.text
+        for k, v in e2g.items():
+            evt_dt = re.sub(k, v, evt_dt)
+        evt_dt = re.search(
+            r"([0-9]+[.] [A-Za-z]+ [0-9]{4} – [0-9.]{5})", evt_dt
+        ).group(0)
+        evt_dt = datetime.datetime.strptime(evt_dt, "%d. %B %Y – %H.%M")
+
+        evt_dt = self.tz.localize(evt_dt)
+
+        # return
+        res = {
+            "start": {
+                "dateTime": evt_dt,
+                "timeZone": self.tz.zone
+            },
+            'summary': evt_summary,
+            'description': url,
+        }
+
+        return res
+
+
 if __name__ == '__main__':
     pass

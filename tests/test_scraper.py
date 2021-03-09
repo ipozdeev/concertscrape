@@ -5,7 +5,8 @@ from unittest import TestCase
 import pytz
 
 from ..scraper import (WigmoreHallScraper, PCMSScraper, ZeneakademiaScraper,
-                       AllaScalaScraper, MagyarorszagScraper, MalmoScraper)
+                       AllaScalaScraper, MagyarorszagScraper, MalmoScraper,
+                       HrScraper)
 
 
 # TODO: finish setUpClass
@@ -110,7 +111,7 @@ class TestZeneakademiaScraper(unittest.TestCase):
         self.assertGreater(len(res), 0)
 
 
-# @unittest.skip
+@unittest.skip
 class TestAllaScalaScraper(TestCase):
     def setUp(self) -> None:
         self.scraper = AllaScalaScraper()
@@ -174,6 +175,30 @@ class TestMalmoScraper(TestCase):
     def test__get_event(self):
         url = "https://malmolive.se/en/program/" \
               "mso-chamber-concert-poulenc-och-dvorak"
+        res_event = self.scraper.get_event(url)
+
+        self.assertEqual(res_event["summary"], self.summary)
+        self.assertEqual(res_event["start"],
+                         dict(dateTime=self.startTime.isoformat(),
+                              timeZone=self.tz.zone))
+
+
+@unittest.skip
+class TestHrScraper(TestCase):
+    def setUp(self) -> None:
+        self.scraper = HrScraper()
+        self.tz = pytz.timezone("Europe/Berlin")
+        self.startTime = \
+            self.tz.localize(datetime.datetime(2021, 3, 11, 20, 0))
+        self.summary = "Music Discovery Project 2021"
+
+    def test_get_event_schedule(self):
+        res = self.scraper.get_event_schedule()
+        self.assertGreater(len(res), 1)
+
+    def test__get_event(self):
+        url = "https://www.hr-sinfonieorchester.de/livestreams/" \
+              "music-discovery-project-2021,livestream-11-03-2021-100.html"
         res_event = self.scraper.get_event(url)
 
         self.assertEqual(res_event["summary"], self.summary)
