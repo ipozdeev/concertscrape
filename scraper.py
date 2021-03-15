@@ -46,9 +46,17 @@ class ConcertScraper:
         Returns
         -------
         dict
+            {'start': {'dateTime': `datetime.datetime()`,
+                       'timeZone': `str`},
+             'end': <same>}
 
         """
-        evt = self._get_event(url)
+        try:
+            evt = self._get_event(url)
+        except Exception:
+            print(f"failed to get {url}")
+            return {}
+
         evt["end"] = {
             'dateTime': (evt["start"]["dateTime"] + self.timedelta) \
                 .isoformat(),
@@ -165,10 +173,15 @@ class ZeneakademiaScraper(ConcertScraper):
         soup = BeautifulSoup(page.content, "html.parser")
 
         # start date
-        regexpr = "[0-9]+ [A-Za-z]+ [0-9]{4}, [0-9]+[.][0-9]{2}"
-        evt_dt_tag = soup.find("h2", text=re.compile(regexpr))
-        evt_dt = evt_dt_tag.text.split("-")[0]
-        evt_dt = datetime.datetime.strptime(evt_dt, "%d %B %Y, %H.%M")
+        expr = "([0-9]+ [A-Za-z]+ [0-9]{4}), ([0-9]+[.:][0-9]{2})"
+        evt_dt_tag = soup.find("h2", text=re.compile(expr))
+
+        # extract date and time separately
+        dt_dt, dt_tm = re.search(expr, evt_dt_tag.text).group(1, 2)
+        dt_tm = re.sub(r"[.]", ":", dt_tm)
+
+        evt_dt = f"{dt_dt}, {dt_tm}"
+        evt_dt = datetime.datetime.strptime(evt_dt, "%d %B %Y, %H:%M")
         evt_dt = self.tz.localize(evt_dt)
 
         # info, in the sibling of the date's grand-parent
