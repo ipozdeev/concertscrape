@@ -4,9 +4,9 @@ from unittest import TestCase
 
 import pytz
 
-from ..scraper import (WigmoreHallScraper, PCMSScraper, ZeneakademiaScraper,
+from ..scraper import (PCMSScraper, ZeneakademiaScraper,
                        AllaScalaScraper, MagyarorszagScraper, MalmoScraper,
-                       HrScraper)
+                       HrScraper, SCOScraper)
 
 
 # TODO: finish setUpClass
@@ -31,29 +31,6 @@ from ..scraper import (WigmoreHallScraper, PCMSScraper, ZeneakademiaScraper,
 #         cls.tz = tz
 #         cls.startTime = tz.localize(start_time)
 #         cls.summary = summary
-
-
-@unittest.skip
-class TestWigmoreHallScraper(unittest.TestCase):
-
-    def setUp(self) -> None:
-        self.scraper = WigmoreHallScraper()
-        self.tz = pytz.timezone("Europe/London")
-        self.startTime = \
-            self.tz.localize(datetime.datetime(2021, 2, 15, 19, 30))
-        self.summary = "Anon, Browne, Cornysh and more by The Sixteen"
-
-    def test_get_event(self):
-        url = "https://wigmore-hall.org.uk/whats-on/the-sixteen-202102151930"
-        res_event = self.scraper.get_event(url)
-
-        self.assertEqual(res_event["summary"], self.summary)
-        self.assertEqual(res_event["start"], dict(dateTime=self.startTime,
-                                                  timeZone=self.tz.zone))
-
-    def test_get_event_schedule(self):
-        res = self.scraper.get_event_schedule()
-        self.assertGreater(len(res), 0)
 
 
 @unittest.skip
@@ -199,6 +176,29 @@ class TestHrScraper(TestCase):
     def test__get_event(self):
         url = "https://www.hr-sinfonieorchester.de/livestreams/" \
               "music-discovery-project-2021,livestream-11-03-2021-100.html"
+        res_event = self.scraper.get_event(url)
+
+        self.assertEqual(res_event["summary"], self.summary)
+        self.assertEqual(res_event["start"],
+                         dict(dateTime=self.startTime.isoformat(),
+                              timeZone=self.tz.zone))
+
+
+@unittest.skip
+class TestSCOScraper(TestCase):
+    def setUp(self) -> None:
+        self.scraper = SCOScraper()
+        self.tz = pytz.timezone("Europe/London")
+        self.startTime = \
+            self.tz.localize(datetime.datetime(2021, 4, 15, 19, 30))
+        self.summary = "Caplet, Clyne & Dvořák"
+
+    def test_get_event_schedule(self):
+        res = self.scraper.get_event_schedule()
+        self.assertGreater(len(res), 1)
+
+    def test__get_event(self):
+        url = "https://www.sco.org.uk/events/caplet-clyne-dvořák-1"
         res_event = self.scraper.get_event(url)
 
         self.assertEqual(res_event["summary"], self.summary)
