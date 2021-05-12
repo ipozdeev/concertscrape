@@ -136,22 +136,21 @@ class TestMagyarorszagScraper(TestCase):
         self.assertGreater(len(res), 0)
 
 
-@unittest.skip
+# @unittest.skip
 class TestMalmoScraper(TestCase):
     def setUp(self) -> None:
         self.scraper = MalmoScraper()
         self.tz = pytz.timezone("Europe/Stockholm")
         self.startTime = \
-            self.tz.localize(datetime.datetime(2021, 2, 18, 19, 0))
-        self.summary = "MSO-Chamber Concert – Poulenc och Dvořák"
+            self.tz.localize(datetime.datetime(2021, 4, 8, 19, 0))
+        self.summary = "MSO Live: Shostakovich on piano"
 
     def test_get_event_schedule(self):
         res = self.scraper.get_event_schedule()
-        self.assertEqual(len(res), 3)
+        self.assertGreater(len(res), 0)
 
     def test__get_event(self):
-        url = "https://malmolive.se/en/program/" \
-              "mso-chamber-concert-poulenc-och-dvorak"
+        url = "https://malmolive.se/en/program/mso-live-shostakovich-on-piano"
         res_event = self.scraper.get_event(url)
 
         self.assertEqual(res_event["summary"], self.summary)

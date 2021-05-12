@@ -392,19 +392,22 @@ class MalmoScraper(ConcertScraper):
         super(MalmoScraper, self).__init__(pytz.timezone("Europe/Stockholm"))
 
     def get_event_schedule(self) -> list:
-        url = "https://malmolive.se/en/digital-concert-hall"
+        url = "https://malmolive.se/en/program"
 
         # parse, create soup
         soup = self.get_soup(url)
 
         # links are relative (!) hrefs in articles
         events = soup.find_all(
-            "div", class_="show-case article contextual-links-region"
+            "div", class_="event-list-item--info__title"
         )
 
         res = list()
         for e_ in events:
-            href = e_.find('a', href=True)["href"]
+            # is MSO Live?
+            if "MSO Live" not in e_.text:
+                continue
+            href = e_.find_parent("a")["href"]
             res.append("https://malmolive.se/" + href)
 
         return res
@@ -413,8 +416,16 @@ class MalmoScraper(ConcertScraper):
         # parse, create soup
         soup = self.get_soup(url)
 
-        evt_dt_txt = soup.find("span", class_="date-display-single").text
-        evt_dt = datetime.datetime.strptime(evt_dt_txt, "%H.%M %a %d %b %Y")
+        evt_dt_txt = soup.find("div", class_="event--date").find("span").text
+        evt_dt = datetime.datetime.strptime(evt_dt_txt, "%a %d %b %H:%M")
+
+        # but there is no year, need to add manually
+        now = datetime.datetime.now()
+        if evt_dt.month < now.month:
+            evt_dt = evt_dt.replace(year=now.year + 1)
+        else:
+            evt_dt = evt_dt.replace(year=now.year)
+
         evt_dt = self.tz.localize(evt_dt)
 
         # info,
@@ -431,7 +442,66 @@ class MalmoScraper(ConcertScraper):
         }
 
         return res
+    
 
+class ElbScraper(ConcertScraper):
+    def __init__(self):
+        super(ElbScraper, self).__init__(pytz.timezone("Europe/Berlin"))
+
+    def get_event_schedule(self) -> list:
+        url = "https://www.elbphilharmonie.de/en/mediatheque/category/streams"
+
+        # parse, create soup
+        soup = self.get_soup(url)
+
+        #
+        def match_pattern(tag):
+            res_ = (tag.name == "span") & \
+                   ("ive stream" in tag.text)
+            return res_
+        events = soup.find_all(match_pattern)
+        res = [e_.find_parent().find("a", href=True)["href"] for e_ in events]
+
+        # + root
+        res = ["https://www.elbphilharmonie.de" + url_ for url_ in res]
+
+        return res
+
+    def _get_event(self, url: str) -> dict:
+        # parse, create soup
+        soup = self.get_soup(url)
+
+        dt_expr = r"on +([0-9]+\s+[A-Za-z]+\s+[0-9]{4})\s+" \
+                  r"at ([0-9]{2}:[0-9]{2})"
+
+        def match_pattern(tag):
+            res_ = (tag.name in ("p", "span")) and \
+                re.search(dt_expr, tag.text)
+            return res_
+        evt_tag = soup.find(match_pattern)
+        evt_dt = re.search(dt_expr, evt_tag.text).group(1) + " " + \
+            re.search(dt_expr, evt_tag.text).group(2)
+        evt_dt = datetime.datetime.strptime(evt_dt, "%d %B %Y %H:%M")
+        evt_dt = self.tz.localize(evt_dt)
+
+        # evt_tag = soup.find("span",
+        #                     class_="blog-detail__sub-title h3 no-uppercase")
+        # info = soup.find("h1", class_="blog-detail__title no-line").text\
+        #     .strip("\n ")
+        info = url.split("/")[-2].replace("-", " ")
+
+        # return
+        res = {
+            "start": {
+                "dateTime": evt_dt,
+                "timeZone": self.tz.zone
+            },
+            'summary': info,
+            'description': url,
+        }
+
+        return res
+    
 
 class HrScraper(ConcertScraper):
     def __init__(self):
@@ -507,4 +577,4 @@ class HrScraper(ConcertScraper):
 
 
 if __name__ == '__main__':
-    pass
+    ElbScraper().get_event("https://www.elbphilharmonie.de/en/mediatheque/xilin-wang-music-by-a-survivor/575")
