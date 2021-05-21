@@ -1,95 +1,18 @@
-import abc
-from abc import ABC
-
-from bs4 import BeautifulSoup
-import requests
 import datetime
 import pytz
 import re
 
-
-class ConcertScraper:
-
-    def __init__(self, tz):
-        self.tz = tz
-        self.timedelta = datetime.timedelta(hours=1, minutes=30)
-
-    @abc.abstractmethod
-    def _get_event(self, url: str) -> dict:
-        """Collect info about one event under a url.
-
-        This needs to be implemented in any child class. The dict produced
-        is then forwarded to `.get_event()` where some additional formatting
-        is applied (e.g. the time zone info is added).
-
-        Parameters
-        ----------
-        url : str
-
-        Returns
-        -------
-        dict
-            {'start': {'dateTime': `datetime.datetime()`,
-                       'timeZone': `str`},
-             'end': <same>}
-
-        """
-        pass
-
-    def get_event(self, url: str) -> dict:
-        """Create calendar-ready event from info in url.
-
-        This is a wrapper to add end time autimatically as startTime + 1.5 hrs.
-
-        Parameters
-        ----------
-        url : str
-
-        Returns
-        -------
-        dict
-            {'start': {'dateTime': `datetime.datetime()`,
-                       'timeZone': `str`},
-             'end': <same>}
-
-        """
-        try:
-            evt = self._get_event(url)
-        except Exception:
-            print(f"failed to get {url}")
-            return {}
-
-        evt["end"] = {
-            'dateTime': (evt["start"]["dateTime"] + self.timedelta)
-                .isoformat(),
-            'timeZone': evt["start"]["timeZone"],
-        }
-        evt["start"]["dateTime"] = evt["start"]["dateTime"].isoformat()
-
-        return evt
-
-    @abc.abstractmethod
-    def get_event_schedule(self) -> list:
-        """Collect links to all events present at a webpage.
-
-        With each link it must be possible to run `self.get_event()`.
-        """
-        pass
-
-    @staticmethod
-    def get_soup(url):
-        page = requests.get(url)
-        soup = BeautifulSoup(page.content, "html.parser")
-
-        return soup
+from .core import PageScraper
 
 
-class PCMSScraper(ConcertScraper):
+class PCMSScraper(PageScraper):
+
+    SCHEDULE_URL = "https://www.pcmsconcerts.org/concerts/livestreams/"
+
     def __init__(self):
         super(PCMSScraper, self).__init__(pytz.timezone("America/New_York"))
 
-    def _get_event(self, url: str) -> dict:
-
+    def get_livestream_details(self, url: str) -> dict:
         # parse, create soup
         soup = self.get_soup(url)
 
@@ -102,25 +25,19 @@ class PCMSScraper(ConcertScraper):
         evt_dt = soup.find("span", itemprop="startDate")
         evt_dt = datetime.datetime.strptime(evt_dt.text,
                                             "%A, %B %d, %Y - %I:%M %p")
-        evt_dt = self.tz.localize(evt_dt)
 
         # return
         res = {
-            "start": {
-                "dateTime": evt_dt,
-                "timeZone": self.tz.zone
-            },
+            "start": evt_dt,
             'summary': info,
             'description': url,
         }
 
         return res
 
-    def get_event_schedule(self):
-        url = "https://www.pcmsconcerts.org/concerts/livestreams/"
-
+    def get_upcoming_livestreams(self):
         # parse, create soup
-        soup = self.get_soup(url)
+        soup = self.get_soup(self.SCHEDULE_URL)
 
         # events are in the grid of 3 columns
         events = soup.find_all("div", class_="col-lg-4 col-md-6")
@@ -133,7 +50,7 @@ class PCMSScraper(ConcertScraper):
         return res
 
 
-class SCOScraper(ConcertScraper):
+class SCOScraper(PageScraper):
     """Scottish Chamber Orchestra (Edinburgh)"""
 
     def __init__(self):
@@ -194,7 +111,7 @@ class SCOScraper(ConcertScraper):
         return res
 
 
-class ZeneakademiaScraper(ConcertScraper):
+class ZeneakademiaScraper(PageScraper):
     def __init__(self):
         super(ZeneakademiaScraper, self) \
             .__init__(pytz.timezone("Europe/Budapest"))
@@ -251,7 +168,7 @@ class ZeneakademiaScraper(ConcertScraper):
         return res
 
 
-class AllaScalaScraper(ConcertScraper):
+class AllaScalaScraper(PageScraper):
     def __init__(self):
         super(AllaScalaScraper, self).__init__(pytz.timezone("Europe/Rome"))
 
@@ -306,7 +223,7 @@ class AllaScalaScraper(ConcertScraper):
         return res
 
 
-class ConcertgebouwScraper(ConcertScraper, ABC):
+class ConcertgebouwScraper(PageScraper):
     EVENTS_URL = "https://www.concertgebouworkest.nl/en/calendar"
 
     def get_event_schedule(self) -> list:
@@ -316,7 +233,7 @@ class ConcertgebouwScraper(ConcertScraper, ABC):
         pass
 
 
-class MagyarorszagScraper(ConcertScraper):
+class MagyarorszagScraper(PageScraper):
 
     def __init__(self):
         super(MagyarorszagScraper, self) \
@@ -387,7 +304,7 @@ class MagyarorszagScraper(ConcertScraper):
         return event_urls
 
 
-class MalmoScraper(ConcertScraper):
+class MalmoScraper(PageScraper):
     def __init__(self):
         super(MalmoScraper, self).__init__(pytz.timezone("Europe/Stockholm"))
 
@@ -444,7 +361,7 @@ class MalmoScraper(ConcertScraper):
         return res
     
 
-class ElbScraper(ConcertScraper):
+class ElbScraper(PageScraper):
     def __init__(self):
         super(ElbScraper, self).__init__(pytz.timezone("Europe/Berlin"))
 
@@ -503,7 +420,7 @@ class ElbScraper(ConcertScraper):
         return res
     
 
-class HrScraper(ConcertScraper):
+class HrScraper(PageScraper):
     def __init__(self):
         super(HrScraper, self).__init__(pytz.timezone("Europe/Berlin"))
 
@@ -557,9 +474,10 @@ class HrScraper(ConcertScraper):
         for k, v in e2g.items():
             evt_dt = re.sub(k, v, evt_dt)
         evt_dt = re.search(
-            r"([0-9]+[.] [A-Za-z]+ [0-9]{4} – [0-9.]{5})", evt_dt
+            r"([0-9]+[.] [A-Za-z]+ [0-9]{4} [–|] [0-9.]{5})", evt_dt
         ).group(0)
-        evt_dt = datetime.datetime.strptime(evt_dt, "%d. %B %Y – %H.%M")
+        evt_dt = re.sub("[–|] ", "", evt_dt)
+        evt_dt = datetime.datetime.strptime(evt_dt, "%d. %B %Y %H.%M")
 
         evt_dt = self.tz.localize(evt_dt)
 
@@ -577,4 +495,4 @@ class HrScraper(ConcertScraper):
 
 
 if __name__ == '__main__':
-    ElbScraper().get_event("https://www.elbphilharmonie.de/en/mediatheque/xilin-wang-music-by-a-survivor/575")
+    YoutubeScraper.by_name("wigmore hall").get_events()

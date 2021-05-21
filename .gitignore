@@ -130,4 +130,6 @@ dmypy.json
 
 # custom
 playground.py
+token.pickle
 scrapy-tutorial
+joblib/
