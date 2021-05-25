@@ -63,6 +63,9 @@ class YoutubeScraper(ConcertScraper):
         "tomsk": "UCt6GEz9zs9ewpELO14uXF6g",
         "spb": "UCOXb8BpqaKJ-nRQZxQC5oEQ",
         "st.mary": "UC43OVDn283J__YlsucboMlw",
+        "massimo": "UC1NTP37ayI-sqRFS76jVDaw",
+        "roma tre": "UCFEEHENyE9XkmszXoNMAtlQ",
+        "siciliana": "UCB5XcPO7UEvCTsON7nNGxvg",
     }
 
     def __init__(self, channel_id):
@@ -76,25 +79,37 @@ class YoutubeScraper(ConcertScraper):
 
         return cls(cls.NAME_MAP[name.lower()])
 
-    def get_events(self):
-        # get livestreams first
-        livestreams = get_upcoming_livestreams(self.channel_id)
+    def get_upcoming_livestreams(self, *args, **kwargs) -> list:
+        """Get upcoming livestreams."""
+        res = get_upcoming_livestreams(self.channel_id, *args, **kwargs)
+        return res
 
-        video_ids = [ls_["id"]["videoId"] for ls_ in livestreams]
+    @staticmethod
+    def video_to_event(video_id: (str, list, tuple)):
+        """Get livestream details and create event accordingly.
 
-        if len(livestreams) < 1:
-            # no streams found
-            return []
+        Parameters
+        ----------
+        video_id : str or list-like
 
-        # create events out of each
+        Returns
+        -------
+        list
+            of events as dictionaries
+
+        """
+        if not isinstance(video_id, str):
+            return YoutubeScraper.video_to_event(",".join(video_id))
+
+        # create event out of each
         # get details
-        ls_details = get_livestreaming_details(",".join(video_ids))
+        ls_details = get_livestreaming_details(video_id)
 
         # create calendar api-conformable event from details
         events = list()
 
         for ls_ in ls_details:
-            end_time = (dateutil.parser.parse(ls_["start"]) + hourandhalf)\
+            end_time = (dateutil.parser.parse(ls_["start"]) + hourandhalf) \
                 .isoformat()
             description = "https://www.youtube.com/watch?v={}" \
                 .format(ls_["videoId"])
@@ -113,6 +128,19 @@ class YoutubeScraper(ConcertScraper):
             events.append(event)
 
         return events
+
+    def get_events(self, *args, **kwargs) -> list:
+        # get livestreams first
+        livestreams = self.get_upcoming_livestreams(*args, **kwargs)
+
+        if len(livestreams) < 1:
+            # no streams found
+            return []
+
+        # convert all video ids to events
+        res = self.video_to_event(livestreams)
+
+        return res
 
 
 class PageScraper(ConcertScraper):

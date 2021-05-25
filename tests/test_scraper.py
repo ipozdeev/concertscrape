@@ -4,9 +4,9 @@ from unittest import TestCase
 
 import pytz
 
-from ..scraper import (PCMSScraper, ZeneakademiaScraper,
-                       AllaScalaScraper, MagyarorszagScraper, MalmoScraper,
-                       HrScraper, SCOScraper)
+from ..scrapers import (PCMSScraper, ZeneakademiaScraper,
+                        AllaScalaScraper, MagyarorszagScraper, MalmoScraper,
+                        HrScraper, SCOScraper)
 
 
 # TODO: finish setUpClass
@@ -33,32 +33,28 @@ from ..scraper import (PCMSScraper, ZeneakademiaScraper,
 #         cls.summary = summary
 
 
-@unittest.skip
+# @unittest.skip
 class TestPCMSScraper(unittest.TestCase):
 
     def setUp(self) -> None:
         self.scraper = PCMSScraper()
         self.tz = pytz.timezone("America/New_York")
+        self.stream_url = \
+            "https://www.pcmsconcerts.org/concerts/danika-the-rose/"
         self.startTime = \
-            self.tz.localize(datetime.datetime(2021, 2, 10, 18))
-        self.summary = "Anthony McGill, clarinet; " \
-                       "Milena Pajaro-van de Stadt, viola; " \
-                       "Gloria Chien, piano - " \
-                       "Philadelphia Chamber Music Society"
+            self.tz.localize(datetime.datetime(2021, 5, 23, 15))
+        self.summary = "Danika the Rose"
 
-    # @unittest.skip
-    def test_get_event(self):
-        url = "https://www.pcmsconcerts.org/concerts/" \
-              "mcgill-pajaro-van-de-stadt-chien/"
-        res_event = self.scraper.get_event(url)
+    @unittest.skip
+    def test_get_livestreaming_details(self):
+        res_event = self.scraper.get_livestream_details(self.stream_url)
 
         self.assertEqual(res_event["summary"], self.summary)
-        self.assertEqual(res_event["start"],
-                         dict(dateTime=self.startTime.isoformat(),
-                              timeZone=self.tz.zone))
+        self.assertEqual(res_event["start"], self.startTime)
 
-    def test_get_event_schedule(self):
-        res = self.scraper.get_event_schedule()
+    @unittest.skip
+    def test_get_upcoming_livestreams(self):
+        res = self.scraper.get_upcoming_livestreams()
         self.assertGreater(len(res), 0)
 
 
@@ -72,7 +68,7 @@ class TestZeneakademiaScraper(unittest.TestCase):
             self.tz.localize(datetime.datetime(2021, 2, 9, 19, 30))
         self.summary = "Cziffra's Heritage by Liszt Academy"
 
-    # @unittest.skip
+    @unittest.skip
     def test_get_event(self):
         url = "https://zeneakademia.hu/all-programs/" \
               "2021-02-09-cziffras-heritage-9753"
@@ -97,6 +93,7 @@ class TestAllaScalaScraper(TestCase):
             self.tz.localize(datetime.datetime(2021, 3, 5, 18, 0))
         self.summary = "Myung-Whun Chung at Teatro alla Scala"
 
+    @unittest.skip
     def test__get_event(self):
         url = "https://www.teatroallascala.org/en/season/2020-2021/concert/" \
               "symphony-concert/myung-whun-chung.html"
@@ -122,6 +119,7 @@ class TestMagyarorszagScraper(TestCase):
             self.tz.localize(datetime.datetime(2021, 3, 4, 19, 0))
         self.summary = "Kodály Kórus Debrecen by Filharmónia Magyarország"
 
+    @unittest.skip
     def test__get_event(self):
         url = "http://filharmonia.hu/program/kodaly-korus-debrecen/"
         res_event = self.scraper.get_event(url)
@@ -136,7 +134,7 @@ class TestMagyarorszagScraper(TestCase):
         self.assertGreater(len(res), 0)
 
 
-# @unittest.skip
+@unittest.skip
 class TestMalmoScraper(TestCase):
     def setUp(self) -> None:
         self.scraper = MalmoScraper()
@@ -165,8 +163,8 @@ class TestHrScraper(TestCase):
         self.scraper = HrScraper()
         self.tz = pytz.timezone("Europe/Berlin")
         self.startTime = \
-            self.tz.localize(datetime.datetime(2021, 3, 11, 20, 0))
-        self.summary = "Music Discovery Project 2021"
+            self.tz.localize(datetime.datetime(2021, 5, 20, 20, 0))
+        self.summary = "Schuberts »Große Sinfonie«"
 
     def test_get_event_schedule(self):
         res = self.scraper.get_event_schedule()
@@ -174,7 +172,7 @@ class TestHrScraper(TestCase):
 
     def test__get_event(self):
         url = "https://www.hr-sinfonieorchester.de/livestreams/" \
-              "music-discovery-project-2021,livestream-11-03-2021-100.html"
+              "schuberts-grosse-sinfonie,livestream-20-05-2021-100.html"
         res_event = self.scraper.get_event(url)
 
         self.assertEqual(res_event["summary"], self.summary)

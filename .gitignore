@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # custom
-playground.py
+../playground.py
 token.pickle
 scrapy-tutorial
 joblib/

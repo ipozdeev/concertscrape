@@ -2,7 +2,7 @@ import datetime
 import pytz
 import re
 
-from .core import PageScraper
+from .core import PageScraper, YoutubeScraper
 
 
 class PCMSScraper(PageScraper):
@@ -495,4 +495,4 @@ class HrScraper(PageScraper):
 
 
 if __name__ == '__main__':
-    YoutubeScraper.by_name("wigmore hall").get_events()
+    pass

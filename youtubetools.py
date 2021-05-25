@@ -1,5 +1,8 @@
+import datetime
 import os
 import pickle
+
+import dateutil.parser
 from joblib import Memory
 
 # google
@@ -9,7 +12,7 @@ import googleapiclient.discovery
 import googleapiclient.errors
 
 SCOPES = ["https://www.googleapis.com/auth/youtube.force-ssl"]
-PATH_TO_CREDS = 'credentials.json'
+PATH_TO_CREDS = '../credentials.json'
 
 cachedir = "./"
 memory = Memory(cachedir, verbose=0)
@@ -52,16 +55,74 @@ def get_api_client():
     return youtube
 
 
+def _get_upcoming_livestreams_low_quota(channel_id: str):
+    # get api client
+    youtube = get_api_client()
+
+    request_channels = youtube.channels().list(
+        part="contentDetails",
+        id=channel_id
+    )
+
+    response_channels = request_channels.execute()
+
+    # all 'uploads' playlists
+    uploads_pl = [
+        ch["contentDetails"]["relatedPlaylists"].get("uploads", None)
+        for ch in response_channels["items"]
+    ]
+
+    # for each playlist, request the videos
+    res = list()
+
+    for pl_ in uploads_pl:
+        request_videos = youtube.playlistItems().list(
+            part="contentDetails",
+            playlistId=pl_,
+            maxResults=50
+        )
+
+        response_videos = request_videos.execute()
+        videos = response_videos["items"]
+
+        # filter out livestreams
+        video_ids = [v_["contentDetails"]["videoId"] for v_ in videos]
+
+        request_livestreams = youtube.videos().list(
+            part="liveStreamingDetails",
+            id=",".join(video_ids)
+        )
+        response_livestreams = request_livestreams.execute()
+        livestreams = response_livestreams["items"]
+
+        for ls_ in livestreams:
+            ls_details = ls_.get("liveStreamingDetails", False)
+            if not ls_details:
+                continue
+            s_t = ls_details.get("scheduledStartTime",
+                                 ls_details["actualStartTime"])
+            if dateutil.parser.parse(s_t).timestamp() < \
+                    datetime.datetime.today().timestamp():
+                continue
+            res.append(ls_["id"])
+
+    return res
+
+
 @memory.cache
-def get_upcoming_livestreams(channel_id: str) -> list:
+def _get_upcoming_livestreams_high_quota(channel_id: str) -> list:
     """Get all upcoming livestreams.
 
     Parameters
     ----------
     channel_id : str
-     e.g. 'UCasi3JnYYVlEfJqIgqj92hg'
-    """
+        e.g. 'UCasi3JnYYVlEfJqIgqj92hg'
 
+    Returns
+    -------
+    res : list
+        of video ids
+    """
     # get api client
     youtube = get_api_client()
 
@@ -74,9 +135,28 @@ def get_upcoming_livestreams(channel_id: str) -> list:
 
     response = request.execute()
 
-    res = response["items"]
+    res = [ls_["id"]["videoId"] for ls_ in response["items"]]
 
     return res
+
+
+def get_upcoming_livestreams(channel_id: str, low_quota: bool = True) -> list:
+    """Get list of video ids of upcoming livestreams on a channel.
+
+    Parameters
+    ----------
+    channel_id : str
+        one channel id (no possibility of multiple channels as of 2021)
+    low_quota : bool
+        False to use the expensive search (100 quota points per `channel_id`)
+
+    """
+    if low_quota:
+        f = _get_upcoming_livestreams_low_quota
+    else:
+        f = _get_upcoming_livestreams_high_quota
+
+    return f(channel_id)
 
 
 @memory.cache
@@ -86,7 +166,7 @@ def get_livestreaming_details(video_id: str) -> list:
     Parameters
     ----------
     video_id : str
-        comma-separated video ids
+        comma-separated video ids, each video must be a livestream
     """
     # get api client
     youtube = get_api_client()
