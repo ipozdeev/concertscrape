@@ -1,4 +1,6 @@
 import datetime
+
+import bs4
 import pytz
 import re
 
@@ -490,6 +492,57 @@ class HrScraper(PageScraper):
             'summary': evt_summary,
             'description': url,
         }
+
+        return res
+
+
+class StMaryScraper(PageScraper):
+    _YEAR = datetime.date.today().year
+
+    def __init__(self):
+        super(StMaryScraper, self).__init__(pytz.timezone("Europe/London"))
+
+    def get_upcoming_livestreams(self) -> list:
+
+        def match_pattern(tag):
+            res_ = \
+                (tag.name == "table") & \
+                (tag.find("table") is not None)
+            return res_
+
+        soup = self.get_soup(
+            "https://www.st-marys-perivale.org.uk/events-001.shtml"
+        )
+
+        tbl = soup.find(match_pattern) \
+                  .find("table") \
+                  .find_all("tr")[1:]
+
+        return tbl
+
+    def get_livestream_details(self, event_tr) -> dict:
+        """
+
+        Parameters
+        ----------
+        event_tr : tag
+            row tag of HTML table containing 2 td
+
+        """
+        # to dates
+        dt, info = tuple(
+            td.find("strong").text.strip() for td in event_tr.find_all("td")
+        )
+
+        dt = datetime.datetime \
+            .strptime(dt, "%A %d %B") \
+            .replace(hour=15, year=self._YEAR)
+
+        info = f"{info} @St. Mary's Perivale"
+
+        res = {"start": dt, "summary": info,
+               "description": "https://www.youtube.com/channel/"
+                              "UC43OVDn283J__YlsucboMlw"}
 
         return res
 
