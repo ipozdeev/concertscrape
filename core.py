@@ -157,27 +157,27 @@ class PageScraper(ConcertScraper):
 
             try:
                 e_ = self.get_livestream_details(u_)
+
+                # localize start time, add 1.5 hours to event start time
+                start_time = self.tz.localize(e_["start"]).isoformat()
+                end_time = (self.tz.localize(e_["start"]) + hourandhalf)\
+                    .isoformat()
+
+                # create event
+                event = {
+                    "start": {
+                        "dateTime": start_time,
+                    },
+                    "end": {
+                        "dateTime": end_time,
+                    },
+                    'summary': e_["summary"],
+                    'description': e_["description"],
+                }
+
+                events.append(event)
+
             except Exception:
                 print(f"failed to get {u_}")
-                return []
-
-            # localize start time, add 1.5 hours to event start time
-            start_time = self.tz.localize(e_["start"]).isoformat()
-            end_time = (self.tz.localize(e_["start"]) + hourandhalf)\
-                .isoformat()
-
-            # create event
-            event = {
-                "start": {
-                    "dateTime": start_time,
-                },
-                "end": {
-                    "dateTime": end_time,
-                },
-                'summary': e_["summary"],
-                'description': e_["description"],
-            }
-
-            events.append(event)
 
         return events
