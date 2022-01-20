@@ -34,8 +34,8 @@ def get_api_client():
     # The file token-youtube.pickle stores the user's access and refresh
     # tokens, and is created automatically when the authorization flow
     # completes for the first time.
-    if os.path.exists('../token-youtube.pickle'):
-        with open('../token-youtube.pickle', 'rb') as token:
+    if os.path.exists('token-youtube.pickle'):
+        with open('token-youtube.pickle', 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -46,7 +46,7 @@ def get_api_client():
                 PATH_TO_CREDS, SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('../token-youtube.pickle', 'wb') as token:
+        with open('token-youtube.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
     youtube = googleapiclient.discovery.build(

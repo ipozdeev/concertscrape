@@ -4,9 +4,9 @@ from unittest import TestCase
 
 import pytz
 
-from concertscrape.src.scrapers import (PCMSScraper, ZeneakademiaScraper,
-                                        AllaScalaScraper, MagyarorszagScraper, MalmoScraper,
-                                        HrScraper, SCOScraper, StMaryScraper)
+from src.scrapers import (PCMSScraper, ZeneakademiaScraper,
+                          AllaScalaScraper, MagyarorszagScraper, MalmoScraper,
+                          HrScraper, SCOScraper, StMaryScraper)
 
 
 # TODO: finish setUpClass
