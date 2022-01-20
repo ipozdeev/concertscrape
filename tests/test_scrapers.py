@@ -4,9 +4,9 @@ from unittest import TestCase
 
 import pytz
 
-from ..scrapers import (PCMSScraper, ZeneakademiaScraper,
-                        AllaScalaScraper, MagyarorszagScraper, MalmoScraper,
-                        HrScraper, SCOScraper)
+from concertscrape.src.scrapers import (PCMSScraper, ZeneakademiaScraper,
+                                        AllaScalaScraper, MagyarorszagScraper, MalmoScraper,
+                                        HrScraper, SCOScraper, StMaryScraper)
 
 
 # TODO: finish setUpClass
@@ -33,7 +33,7 @@ from ..scrapers import (PCMSScraper, ZeneakademiaScraper,
 #         cls.summary = summary
 
 
-# @unittest.skip
+@unittest.skip
 class TestPCMSScraper(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -202,3 +202,17 @@ class TestSCOScraper(TestCase):
         self.assertEqual(res_event["start"],
                          dict(dateTime=self.startTime.isoformat(),
                               timeZone=self.tz.zone))
+
+
+@unittest.skip
+class TestStMaryScraper(TestCase):
+    def setUp(self) -> None:
+        self.scraper = StMaryScraper()
+        self.tz = pytz.timezone("Europe/London")
+        self.startTime = \
+            self.tz.localize(datetime.datetime(2021, 10, 5, 15, 0))
+        self.summary = "Alicja Fiderkiewicz (piano)"
+
+    def test_get_upcoming_livestreams(self):
+        res = self.scraper.get_upcoming_livestreams()
+        self.assertGreater(len(res), 1)

@@ -1,7 +1,6 @@
-import unittest
 from unittest import TestCase
-from ..youtubetools import (get_upcoming_livestreams,
-                            get_livestreaming_details)
+from concertscrape.src.youtubetools import (get_upcoming_livestreams,
+                                            get_livestreaming_details)
 
 
 class Test(TestCase):

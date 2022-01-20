@@ -1,4 +1,6 @@
 import abc
+import os.path
+
 from bs4 import BeautifulSoup
 import requests
 import datetime
@@ -34,7 +36,8 @@ class YoutubeScraper(ConcertScraper):
     @classmethod
     def by_name(cls, name: str):
 
-        with open("concertscrape/channels.json", mode="r") as fp:
+        with open(os.path.join(os.environ.get("PROJECT_ROOT"),
+                               "data/channels.json"), mode="r") as fp:
             channels = json.load(fp)
 
         if name not in channels:

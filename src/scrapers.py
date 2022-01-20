@@ -1,10 +1,8 @@
 import datetime
-
-import bs4
 import pytz
 import re
 
-from .core import PageScraper, YoutubeScraper
+from .core import PageScraper
 
 
 class PCMSScraper(PageScraper):
