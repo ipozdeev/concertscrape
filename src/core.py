@@ -1,6 +1,5 @@
 import abc
 import os.path
-
 from bs4 import BeautifulSoup
 import requests
 import datetime
@@ -30,11 +29,12 @@ class ConcertScraper:
 
 class YoutubeScraper(ConcertScraper):
 
-    def __init__(self, channel_id):
+    def __init__(self, channel_id, client):
         self.channel_id = channel_id
+        self.client = client
 
     @classmethod
-    def by_name(cls, name: str):
+    def by_name(cls, name: str, client):
 
         with open(os.path.join(os.environ.get("PROJECT_ROOT"),
                                "data/channels.json"), mode="r") as fp:
@@ -44,15 +44,15 @@ class YoutubeScraper(ConcertScraper):
             raise ValueError("unknown name. channel either erroneously "
                              "spelled or not implemented.")
 
-        return cls(channels[name.lower()])
+        return cls(channels[name.lower()], client=client)
 
     def get_upcoming_livestreams(self, *args, **kwargs) -> list:
         """Get upcoming livestreams."""
-        res = get_upcoming_livestreams(self.channel_id, *args, **kwargs)
+        res = get_upcoming_livestreams(self.channel_id, client=self.client,
+                                       *args, **kwargs)
         return res
 
-    @staticmethod
-    def video_to_event(video_id: (str, list, tuple)):
+    def video_to_event(self, video_id: (str, list, tuple)):
         """Get livestream details and create event accordingly.
 
         Parameters
@@ -66,11 +66,11 @@ class YoutubeScraper(ConcertScraper):
 
         """
         if not isinstance(video_id, str):
-            return YoutubeScraper.video_to_event(",".join(video_id))
+            return self.video_to_event(",".join(video_id))
 
         # create event out of each
         # get details
-        ls_details = get_livestreaming_details(video_id)
+        ls_details = get_livestreaming_details(video_id, client=self.client)
 
         # create calendar api-conformable event from details
         events = list()

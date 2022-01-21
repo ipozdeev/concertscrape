@@ -3,27 +3,39 @@ import datetime
 import pickle
 import os
 import dateutil.parser
+import logging
 
-from googleapiclient.discovery import build
+# google
+import googleapiclient.discovery
+from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-
-# If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://www.googleapis.com/auth/calendar.events']
-PATH_TO_CRED = os.environ.get("GOOGLE_CRED_FILE")
 
 # id of the calendar with livestreams
 calId = os.environ.get("CALENDAR_ID")
 
+logger = logging.getLogger("main.calendar")
 
-def get_api_client():
+
+def get_calendar_client():
+    """Establish connection and set up an API client using credentials.
+
+    Relies on the path to an existing .json file set as an environment
+    variable 'GOOGLE_CRED_FILE'.
+    """
+    logger.info("obtaining calendar handler")
+    scopes = ['https://www.googleapis.com/auth/calendar.events']
+    creds_file = os.environ.get("GOOGLE_CREDS_FILE")
+    api_service_name = "calendar"
+    api_version = "v3"
+
     creds = None
-    # The file token.pickle stores the user's access and refresh tokens, and is
+    # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
+    if os.path.exists('token-calendar.json'):
+        creds = Credentials.from_authorized_user_file('token-calendar.json',
+                                                      scopes)
 
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -31,19 +43,22 @@ def get_api_client():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                PATH_TO_CRED, SCOPES)
+                creds_file, scopes)
             creds = flow.run_local_server(port=0)
 
         # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
+        with open('token-calendar.json', 'w') as token:
+            token.write(creds.to_json())
 
-    service = build('calendar', 'v3', credentials=creds)
+    service = googleapiclient.discovery.build(
+        api_service_name, api_version, credentials=creds
+    )
 
+    logger.info("...success!")
     return service
 
 
-def insert_event(event) -> None:
+def insert_event(event, client) -> None:
     """Insert event into calendar
 
     Parameters
@@ -57,13 +72,14 @@ def insert_event(event) -> None:
         ],
         "summary": str
 
+    client :
+
     """
     # skip empty events
     if len(event) < 1:
         return
 
-    # get calendar
-    client = get_api_client()
+    logger.info(f"inserting event {event.get('summary')}")
 
     # check if an event exists
     # get all existing events from now
@@ -82,11 +98,9 @@ def insert_event(event) -> None:
     for e_ in events:
         eq_summary = e_["summary"] == event["summary"]
         if eq_summary:
-            print("nope, such an event exists")
+            logger.info("such an event exists!")
             return
 
     event["start"]["dateTime"] = event["start"]["dateTime"]
     event["end"]["dateTime"] = event["end"]["dateTime"]
     client.events().insert(calendarId=calId, body=event).execute()
-
-    print("inserted {}\n".format(event["summary"]))

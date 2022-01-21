@@ -1,12 +1,14 @@
 import unittest
-from src.youtubetools import (get_upcoming_livestreams, get_api_client,
+from src.youtubetools import (get_upcoming_livestreams, get_youtube_client,
                               get_livestreaming_details)
+
+from setup import *
 
 
 class Test(unittest.TestCase):
 
     def test_youtube_init(self):
-        yt = get_api_client()
+        yt = get_youtube_client()
 
     @unittest.skip
     def test_get_upcoming_livestreams(self):
