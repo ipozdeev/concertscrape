@@ -1,6 +1,7 @@
 import datetime
 import pytz
 import re
+from dateutil.parser import parse
 
 from .core import PageScraper
 
@@ -532,9 +533,12 @@ class StMaryScraper(PageScraper):
             td.find("strong").text.strip() for td in event_tr.find_all("td")
         )
 
-        dt = datetime.datetime \
-            .strptime(dt, "%A %d %B") \
+        dt = parse(dt, ignoretz=True) \
             .replace(hour=15, year=self._YEAR)
+
+        # dt = datetime.datetime \
+        #     .strptime(dt, "%A %d %B") \
+        #     .replace(hour=15, year=self._YEAR)
 
         info = f"{info} @St. Mary's Perivale"
 

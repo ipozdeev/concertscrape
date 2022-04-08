@@ -29,7 +29,7 @@ class ConcertScraper:
 
 class YoutubeScraper(ConcertScraper):
 
-    def __init__(self, channel_id, client):
+    def __init__(self, channel_id=None, client=None):
         self.channel_id = channel_id
         self.client = client
 
@@ -52,7 +52,7 @@ class YoutubeScraper(ConcertScraper):
                                        *args, **kwargs)
         return res
 
-    def video_to_event(self, video_id: (str, list, tuple)):
+    def video_to_event(self, video_id: (str, list, tuple)) -> list:
         """Get livestream details and create event accordingly.
 
         Parameters
