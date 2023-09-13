@@ -2,7 +2,7 @@ import unittest
 from src.youtubetools import (get_upcoming_livestreams, get_youtube_client,
                               get_livestreaming_details)
 
-from setup import *
+from config import *
 
 
 class Test(unittest.TestCase):
