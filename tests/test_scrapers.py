@@ -210,7 +210,7 @@ class TestStMaryScraper(TestCase):
         self.scraper = StMaryScraper()
         self.tz = pytz.timezone("Europe/London")
         self.startTime = \
-            self.tz.localize(datetime.datetime(2021, 10, 5, 15, 0))
+            self.tz.localize(datetime.datetime(2023, 9, 11, 15, 0))
         self.summary = "Alicja Fiderkiewicz (piano)"
 
     def test_get_upcoming_livestreams(self):

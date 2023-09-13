@@ -1,6 +1,6 @@
 import json
 
-from setup import *
+from config import *
 
 from src.calendartools import insert_event, get_calendar_client
 from src.youtubetools import get_youtube_client

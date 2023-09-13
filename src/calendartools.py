@@ -21,7 +21,7 @@ def get_calendar_client():
     """Establish connection and set up an API client using credentials.
 
     Relies on the path to an existing .json file set as an environment
-    variable 'GOOGLE_CRED_FILE'.
+    variable 'GOOGLE_CREDS_FILE'.
     """
     logger.info("obtaining calendar handler")
     scopes = ['https://www.googleapis.com/auth/calendar.events']
