@@ -515,7 +515,7 @@ class StMaryScraper(PageScraper):
 
         tbl = soup.find(match_pattern) \
                   .find("table") \
-                  .find_all("tr")[1:]
+                  .find_all("tr")
 
         return tbl
 
@@ -534,17 +534,12 @@ class StMaryScraper(PageScraper):
         )
 
         dt = parse(dt, ignoretz=True) \
-            .replace(hour=15, year=self._YEAR)
-
-        # dt = datetime.datetime \
-        #     .strptime(dt, "%A %d %B") \
-        #     .replace(hour=15, year=self._YEAR)
+            .replace(year=self._YEAR)
 
         info = f"{info} @St. Mary's Perivale"
 
         res = {"start": dt, "summary": info,
-               "description": "https://www.youtube.com/channel/"
-                              "UC43OVDn283J__YlsucboMlw"}
+               "description": "https://www.youtube.com/@stmarysperivale2842"}
 
         return res
 
