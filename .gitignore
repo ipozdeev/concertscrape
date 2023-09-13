@@ -133,3 +133,10 @@ playground.py
 *.pickle
 scrapy-tutorial
 joblib/
+
+# credentials (google)
+client_secret*
+token-calendar.json
+token-gmail.json
+
+.idea/
