@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
   <title>Classical concert livestreams</title>
   <meta name="description" content="A calendar of upcoming classical-music livestreams, shown in your local time." />
 
@@ -12,54 +13,135 @@
   <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.15/index.global.min.js"></script>
 
   <style>
+    /* --- Warm "varnished wood" palette (maple, walnut, amber) --- */
     :root {
-      --bg: #ffffff; --fg: #1a1a2e; --muted: #5b5b77;
-      --accent: #6d4aff; --card: #f6f5ff; --border: #e4e2f5;
+      --bg: #f3e7d5;          /* pale maple / parchment */
+      --bg-2: #ecdcc4;        /* soft grain for the page gradient */
+      --card: #fbf4e9;        /* light spruce top */
+      --fg: #3a2416;          /* dark walnut ink */
+      --muted: #8a6244;       /* tobacco / aged wood */
+      --accent: #a2542a;      /* cello varnish (sienna) */
+      --accent-strong: #863f1d;
+      --border: #dcc3a3;      /* light wood grain */
+      --today: #f2ddb9;       /* honey wash */
+      --event-text: #fdf4e6;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #14131f; --fg: #ece9ff; --muted: #a5a1c4;
-        --accent: #a992ff; --card: #1f1d2e; --border: #2c2a3f;
+        --bg: #1e140d;        /* roasted walnut */
+        --bg-2: #2a1c12;
+        --card: #291c12;      /* espresso panel */
+        --fg: #f1e2cd;        /* candlelit cream */
+        --muted: #c1a074;     /* warm brass */
+        --accent: #d5924f;    /* lit maple / amber */
+        --accent-strong: #e4a866;
+        --border: #4a3521;    /* dark grain */
+        --today: #3a2817;     /* warm shadow */
+        --event-text: #241407;
       }
     }
+    :root[data-theme="light"] {
+      --bg: #f3e7d5; --bg-2: #ecdcc4; --card: #fbf4e9; --fg: #3a2416;
+      --muted: #8a6244; --accent: #a2542a; --accent-strong: #863f1d;
+      --border: #dcc3a3; --today: #f2ddb9; --event-text: #fdf4e6;
+    }
+    :root[data-theme="dark"] {
+      --bg: #1e140d; --bg-2: #2a1c12; --card: #291c12; --fg: #f1e2cd;
+      --muted: #c1a074; --accent: #d5924f; --accent-strong: #e4a866;
+      --border: #4a3521; --today: #3a2817; --event-text: #241407;
+    }
+
     * { box-sizing: border-box; }
     body {
-      margin: 0; background: var(--bg); color: var(--fg);
+      margin: 0; min-height: 100vh; color: var(--fg);
+      background: linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
+      background-attachment: fixed;
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      line-height: 1.5;
+      line-height: 1.55;
     }
-    header {
-      max-width: 1000px; margin: 0 auto; padding: 2rem 1.25rem 0.5rem;
+    .serif {
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
     }
-    h1 { margin: 0 0 .25rem; font-size: 1.6rem; }
-    p.sub { margin: 0 0 1rem; color: var(--muted); }
-    .actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1rem; }
+    header { max-width: 1000px; margin: 0 auto; padding: 2.4rem 1.25rem 0.75rem; }
+    h1 {
+      margin: 0 0 .35rem; font-size: 2rem; font-weight: 600;
+      letter-spacing: .01em; color: var(--fg);
+    }
+    p.sub { margin: 0 0 1.15rem; color: var(--muted); font-size: 1.02rem; }
+    p.sub strong { color: var(--accent); }
+
+    .actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: .9rem; }
     .btn {
-      display: inline-block; padding: .55rem .9rem; border-radius: .55rem;
+      display: inline-block; padding: .58rem 1rem; border-radius: .6rem;
       border: 1px solid var(--border); background: var(--card); color: var(--fg);
-      text-decoration: none; font-size: .9rem; cursor: pointer;
+      text-decoration: none; font-size: .92rem; font-weight: 500; cursor: pointer;
+      transition: background .15s ease, border-color .15s ease, color .15s ease;
     }
-    .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-    .tz { color: var(--muted); font-size: .85rem; }
+    .btn:hover { border-color: var(--accent); color: var(--accent); }
+    .btn.primary {
+      background: var(--accent); border-color: var(--accent); color: var(--event-text);
+    }
+    .btn.primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--event-text); }
+    .tz { color: var(--muted); font-size: .86rem; }
+
     main { max-width: 1000px; margin: 0 auto; padding: 0 1.25rem 3rem; }
     #calendar {
       background: var(--card); border: 1px solid var(--border);
-      border-radius: .75rem; padding: 1rem;
+      border-radius: .85rem; padding: 1.15rem;
+      box-shadow: 0 12px 30px -18px rgba(58, 36, 22, .55);
+
+      /* --- FullCalendar theme variables mapped to the wood palette --- */
+      --fc-border-color: var(--border);
+      --fc-page-bg-color: transparent;
+      --fc-neutral-bg-color: var(--today);
+      --fc-today-bg-color: var(--today);
+      --fc-button-text-color: var(--event-text);
+      --fc-button-bg-color: var(--accent);
+      --fc-button-border-color: var(--accent);
+      --fc-button-hover-bg-color: var(--accent-strong);
+      --fc-button-hover-border-color: var(--accent-strong);
+      --fc-button-active-bg-color: var(--accent-strong);
+      --fc-button-active-border-color: var(--accent-strong);
+      --fc-event-bg-color: var(--accent);
+      --fc-event-border-color: var(--accent);
+      --fc-event-text-color: var(--event-text);
+      --fc-list-event-hover-bg-color: var(--today);
+      --fc-highlight-color: var(--today);
     }
-    .fc a { color: inherit; }
+
+    /* Month/week title: the previously faint heading, now high-contrast */
+    .fc .fc-toolbar-title {
+      color: var(--fg); font-weight: 600; font-size: 1.5rem; letter-spacing: .01em;
+    }
+    .fc .fc-toolbar.fc-header-toolbar { margin-bottom: 1.1rem; }
+    .fc .fc-button { font-weight: 500; text-transform: capitalize; box-shadow: none; }
+    .fc .fc-button:focus { box-shadow: 0 0 0 2px var(--today); }
+
+    /* Day-of-week row and date numbers: readable warm ink */
+    .fc .fc-col-header-cell-cushion {
+      color: var(--muted); font-weight: 600; text-transform: uppercase;
+      letter-spacing: .04em; font-size: .78rem; padding: .5rem 0;
+    }
+    .fc .fc-daygrid-day-number { color: var(--fg); font-weight: 500; }
+    .fc .fc-day-today .fc-daygrid-day-number { color: var(--accent-strong); font-weight: 700; }
+    .fc-theme-standard td, .fc-theme-standard th { border-color: var(--border); }
+    .fc .fc-event { border-radius: .35rem; padding: 1px 3px; font-weight: 500; }
+    .fc a { color: inherit; text-decoration: none; }
+    .fc .fc-list-day-cushion { background: var(--today); }
+
     footer {
-      max-width: 1000px; margin: 0 auto; padding: 0 1.25rem 2rem;
-      color: var(--muted); font-size: .85rem;
+      max-width: 1000px; margin: 0 auto; padding: 0 1.25rem 2.4rem;
+      color: var(--muted); font-size: .88rem;
     }
-    footer code { background: var(--card); padding: .1rem .35rem; border-radius: .3rem; }
+    footer em { color: var(--fg); font-style: normal; font-weight: 600; }
   </style>
 </head>
 <body>
   <header>
-    <h1>🎻 Classical concert livestreams</h1>
+    <h1 class="serif">Classical concert livestreams</h1>
     <p class="sub">Upcoming free livestreams from concert halls and orchestras worldwide, shown in <strong>your</strong> local time.</p>
     <div class="actions">
-      <a id="subscribe" class="btn primary" href="#">＋ Subscribe in your calendar app</a>
+      <a id="subscribe" class="btn primary" href="#">Subscribe in your calendar app</a>
       <a class="btn" href="./calendar.ics" download>Download .ics</a>
       <button class="btn" id="copy">Copy feed URL</button>
     </div>
@@ -73,7 +155,7 @@
   <footer>
     <p>
       Subscribe once and new concerts appear automatically. In Proton Calendar:
-      <em>Other calendars → Add calendar from URL</em> and paste the feed URL.
+      <em>Other calendars &rarr; Add calendar from URL</em> and paste the feed URL.
       Works the same in Google, Apple, and Outlook calendars.
     </p>
   </footer>
@@ -89,10 +171,10 @@
     document.getElementById('tzline').textContent = 'Times shown in your timezone: ' + tz;
 
     document.getElementById('copy').addEventListener('click', async () => {
+      const b = document.getElementById('copy');
       try {
         await navigator.clipboard.writeText(feedHttps);
-        const b = document.getElementById('copy');
-        b.textContent = 'Copied!';
+        b.textContent = 'Copied';
         setTimeout(() => (b.textContent = 'Copy feed URL'), 1500);
       } catch (e) { window.prompt('Copy the feed URL:', feedHttps); }
     });
