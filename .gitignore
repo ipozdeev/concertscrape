@@ -134,9 +134,11 @@ playground.py
 scrapy-tutorial
 joblib/
 
-# credentials (google)
+# credentials (google) — optional gcal mirror only
 client_secret*
-token-calendar.json
-token-gmail.json
+token-*.json
+
+# local env
+.env
 
 .idea/

@@ -1,0 +1,54 @@
+[project]
+name = "concertscrape"
+version = "0.2.0"
+description = "Scrapers that collect upcoming classical-concert livestreams into a public .ics calendar feed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+dependencies = [
+    "beautifulsoup4>=4.12",
+    "requests>=2.31",
+    "python-dateutil>=2.8",
+    "icalendar>=5.0",
+    "google-api-python-client>=2.100",
+    "python-dotenv>=1.0",
+    "pytz>=2023.3",
+]
+
+[project.optional-dependencies]
+# Optional: mirror events into a Google Calendar (needs OAuth credentials).
+gcal = [
+    "google-auth-oauthlib>=1.2",
+    "google-auth-httplib2>=0.2",
+]
+
+[project.scripts]
+concertscrape = "concertscrape.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/concertscrape"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+# Preserved-verbatim legacy scrapers and the copy-me template are not linted.
+extend-exclude = [
+    "src/concertscrape/scrapers/contrib/needs_porting",
+    "src/concertscrape/scrapers/contrib/TEMPLATE.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]

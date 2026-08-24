@@ -1,54 +1,20 @@
+"""Venue scrapers written against the OLD interface. See package docstring.
+
+These are preserved verbatim from the pre-restructure ``src/scrapers.py`` and
+are NOT registered or run. They implement ``get_event_schedule()`` /
+``_get_event()`` (old shape) rather than the current
+``get_upcoming_livestreams()`` / ``get_livestream_details()`` and therefore
+cannot run through ``PageScraper.get_events()`` as-is. Port them before use.
+"""
+
+from __future__ import annotations
+
 import datetime
-import pytz
 import re
-from dateutil.parser import parse
 
-from .core import PageScraper
+import pytz
 
-
-class PCMSScraper(PageScraper):
-
-    SCHEDULE_URL = "https://www.pcmsconcerts.org/concerts/livestreams/"
-
-    def __init__(self):
-        super(PCMSScraper, self).__init__(pytz.timezone("America/New_York"))
-
-    def get_livestream_details(self, url: str) -> dict:
-        # parse, create soup
-        soup = self.get_soup(url)
-
-        # info, in the title of the page
-        info = soup.title.text
-        if "Philadelphia" not in info:
-            info += " by PCMS"
-
-        # start date
-        evt_dt = soup.find("span", itemprop="startDate")
-        evt_dt = datetime.datetime.strptime(evt_dt.text,
-                                            "%A, %B %d, %Y - %I:%M %p")
-
-        # return
-        res = {
-            "start": evt_dt,
-            'summary': info,
-            'description': url,
-        }
-
-        return res
-
-    def get_upcoming_livestreams(self):
-        # parse, create soup
-        soup = self.get_soup(self.SCHEDULE_URL)
-
-        # events are in the grid of 3 columns
-        events = soup.find_all("div", class_="col-lg-4 col-md-6")
-
-        res = list()
-        for e_ in events:
-            href = e_.find('a', href=True)["href"]
-            res.append(href)
-
-        return res
+from concertscrape.scrapers.base import PageScraper
 
 
 class SCOScraper(PageScraper):
@@ -224,16 +190,6 @@ class AllaScalaScraper(PageScraper):
         return res
 
 
-class ConcertgebouwScraper(PageScraper):
-    EVENTS_URL = "https://www.concertgebouworkest.nl/en/calendar"
-
-    def get_event_schedule(self) -> list:
-        pass
-
-    def get_event(self, url: str) -> dict:
-        pass
-
-
 class MagyarorszagScraper(PageScraper):
 
     def __init__(self):
@@ -360,7 +316,7 @@ class MalmoScraper(PageScraper):
         }
 
         return res
-    
+
 
 class ElbScraper(PageScraper):
     def __init__(self):
@@ -402,10 +358,6 @@ class ElbScraper(PageScraper):
         evt_dt = datetime.datetime.strptime(evt_dt, "%d %B %Y %H:%M")
         evt_dt = self.tz.localize(evt_dt)
 
-        # evt_tag = soup.find("span",
-        #                     class_="blog-detail__sub-title h3 no-uppercase")
-        # info = soup.find("h1", class_="blog-detail__title no-line").text\
-        #     .strip("\n ")
         info = url.split("/")[-2].replace("-", " ")
 
         # return
@@ -419,7 +371,7 @@ class ElbScraper(PageScraper):
         }
 
         return res
-    
+
 
 class HrScraper(PageScraper):
     def __init__(self):
@@ -493,56 +445,3 @@ class HrScraper(PageScraper):
         }
 
         return res
-
-
-class StMaryScraper(PageScraper):
-    _YEAR = datetime.date.today().year
-
-    def __init__(self):
-        super(StMaryScraper, self).__init__(pytz.timezone("Europe/London"))
-
-    def get_upcoming_livestreams(self) -> list:
-
-        def match_pattern(tag):
-            res_ = \
-                (tag.name == "table") & \
-                (tag.find("table") is not None)
-            return res_
-
-        soup = self.get_soup(
-            "https://www.st-marys-perivale.org.uk/events-001.shtml"
-        )
-
-        tbl = soup.find(match_pattern) \
-                  .find("table") \
-                  .find_all("tr")
-
-        return tbl
-
-    def get_livestream_details(self, event_tr) -> dict:
-        """
-
-        Parameters
-        ----------
-        event_tr : tag
-            row tag of HTML table containing 2 td
-
-        """
-        # to dates
-        dt, info = tuple(
-            td.find("strong").text.strip() for td in event_tr.find_all("td")
-        )
-
-        dt = parse(dt, ignoretz=True) \
-            .replace(year=self._YEAR)
-
-        info = f"{info} @St. Mary's Perivale"
-
-        res = {"start": dt, "summary": info,
-               "description": "https://www.youtube.com/@stmarysperivale2842"}
-
-        return res
-
-
-if __name__ == '__main__':
-    pass

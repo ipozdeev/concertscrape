@@ -1,0 +1,8 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//concertscrape//classical livestreams//EN
+NAME:Classical concert livestreams
+X-WR-CALNAME:Classical concert livestreams
+REFRESH-INTERVAL;VALUE=DURATION:P1D
+X-PUBLISHED-TTL:P1D
+END:VCALENDAR
