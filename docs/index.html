@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
   <title>Classical concert livestreams</title>
-  <meta name="description" content="A calendar of upcoming classical-music livestreams, shown in your local time." />
+  <meta name="description" content="A calendar of upcoming classical livestreams, in your local time." />
 
   <!-- FullCalendar (MIT) + iCalendar feed plugin, self-contained via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js"></script>
@@ -52,8 +52,10 @@
     }
 
     * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
     body {
       margin: 0; min-height: 100vh; color: var(--fg);
+      overflow-x: hidden;
       background: linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%);
       background-attachment: fixed;
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -62,29 +64,36 @@
     .serif {
       font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
     }
-    header { max-width: 1000px; margin: 0 auto; padding: 2.4rem 1.25rem 0.75rem; }
+    .wrap { max-width: 1000px; margin: 0 auto; }
+    header { padding: 2.2rem 1.25rem 0.75rem; }
     h1 {
       margin: 0 0 .35rem; font-size: 2rem; font-weight: 600;
-      letter-spacing: .01em; color: var(--fg);
+      line-height: 1.15; letter-spacing: .01em; color: var(--fg);
     }
-    p.sub { margin: 0 0 1.15rem; color: var(--muted); font-size: 1.02rem; }
+    p.sub { margin: 0 0 1.1rem; color: var(--muted); font-size: 1.02rem; }
     p.sub strong { color: var(--accent); }
 
     .actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: .9rem; }
     .btn {
-      display: inline-block; padding: .58rem 1rem; border-radius: .6rem;
+      display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+      padding: .58rem 1rem; border-radius: .6rem; min-height: 44px;
       border: 1px solid var(--border); background: var(--card); color: var(--fg);
       text-decoration: none; font-size: .92rem; font-weight: 500; cursor: pointer;
       transition: background .15s ease, border-color .15s ease, color .15s ease;
     }
     .btn:hover { border-color: var(--accent); color: var(--accent); }
+    /* Icons + short labels are for the compact mobile row; hidden on desktop. */
+    .btn .ico { width: 1.05em; height: 1.05em; flex: 0 0 auto; display: none;
+      fill: none; stroke: currentColor; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round; }
+    .btn .lbl-short { display: none; }
     .btn.primary {
       background: var(--accent); border-color: var(--accent); color: var(--event-text);
     }
     .btn.primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--event-text); }
     .tz { color: var(--muted); font-size: .86rem; }
 
-    main { max-width: 1000px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+    main { padding: 0 1.25rem 3rem; }
     #calendar {
       background: var(--card); border: 1px solid var(--border);
       border-radius: .85rem; padding: 1.15rem;
@@ -109,15 +118,16 @@
       --fc-highlight-color: var(--today);
     }
 
-    /* Month/week title: the previously faint heading, now high-contrast */
     .fc .fc-toolbar-title {
       color: var(--fg); font-weight: 600; font-size: 1.5rem; letter-spacing: .01em;
     }
-    .fc .fc-toolbar.fc-header-toolbar { margin-bottom: 1.1rem; }
-    .fc .fc-button { font-weight: 500; text-transform: capitalize; box-shadow: none; }
-    .fc .fc-button:focus { box-shadow: 0 0 0 2px var(--today); }
+    .fc .fc-toolbar.fc-header-toolbar { margin-bottom: 1.1rem; gap: .5rem; }
+    .fc .fc-button {
+      font-weight: 500; text-transform: capitalize; box-shadow: none;
+      padding: .4rem .7rem;
+    }
+    .fc .fc-button:focus, .fc .fc-button:focus-visible { box-shadow: 0 0 0 2px var(--today); outline: none; }
 
-    /* Day-of-week row and date numbers: readable warm ink */
     .fc .fc-col-header-cell-cushion {
       color: var(--muted); font-weight: 600; text-transform: uppercase;
       letter-spacing: .04em; font-size: .78rem; padding: .5rem 0;
@@ -128,31 +138,72 @@
     .fc .fc-event { border-radius: .35rem; padding: 1px 3px; font-weight: 500; }
     .fc a { color: inherit; text-decoration: none; }
     .fc .fc-list-day-cushion { background: var(--today); }
+    /* List/agenda rows: let long concert titles wrap instead of truncating */
+    .fc .fc-list-event-title { white-space: normal; }
+    .fc .fc-list-event-title a { display: inline-block; }
 
     footer {
-      max-width: 1000px; margin: 0 auto; padding: 0 1.25rem 2.4rem;
-      color: var(--muted); font-size: .88rem;
+      padding: 0 1.25rem 2.4rem; color: var(--muted); font-size: .88rem;
     }
     footer em { color: var(--fg); font-style: normal; font-weight: 600; }
+
+    /* ---------------- Mobile ---------------- */
+    @media (max-width: 640px) {
+      header { padding: 1.5rem 1rem 0.5rem; }
+      h1 { font-size: 1.45rem; }
+      p.sub { font-size: .95rem; margin-bottom: .9rem; }
+      main { padding: 0 .8rem 2rem; }
+      footer { display: none; }
+
+      /* Three compact buttons side by side, icon + short label */
+      .actions { flex-direction: row; gap: .45rem; }
+      .btn { flex: 1 1 0; min-width: 0; padding: .5rem .3rem; font-size: .9rem; min-height: 42px; }
+      .btn .ico { display: inline-block; }
+      .btn .lbl-full { display: none; }
+      .btn .lbl-short { display: inline; }
+
+      #calendar { padding: .55rem; border-radius: .6rem; }
+
+      /* Stack the calendar toolbar into centered rows so nothing is crammed */
+      .fc .fc-toolbar.fc-header-toolbar {
+        flex-direction: column; align-items: center; gap: .6rem; margin-bottom: .8rem;
+      }
+      .fc .fc-toolbar-title { font-size: 1.2rem; }
+      .fc .fc-button { padding: .45rem .7rem; font-size: .82rem; }
+      .fc .fc-toolbar-chunk { display: flex; justify-content: center; }
+
+      /* Roomier agenda rows and readable day-of-week header */
+      .fc .fc-col-header-cell-cushion { font-size: .68rem; letter-spacing: .02em; }
+      .fc .fc-list-event-time { white-space: nowrap; }
+      .fc .fc-list-event-title { font-size: .95rem; }
+    }
   </style>
 </head>
 <body>
-  <header>
+  <header class="wrap">
     <h1 class="serif">Classical concert livestreams</h1>
-    <p class="sub">Upcoming free livestreams from concert halls and orchestras worldwide, shown in <strong>your</strong> local time.</p>
+    <p class="sub">Upcoming free livestreams, in <strong>your</strong> local time.</p>
     <div class="actions">
-      <a id="subscribe" class="btn primary" href="#">Subscribe in your calendar app</a>
-      <a class="btn" href="./calendar.ics" download>Download .ics</a>
-      <button class="btn" id="copy">Copy feed URL</button>
+      <a id="subscribe" class="btn primary" href="#">
+        <span class="lbl-full">Subscribe in your calendar app</span><span class="lbl-short">+Sub</span>
+      </a>
+      <a class="btn" href="./calendar.ics" download>
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11"/><path d="M8 11l4 4 4-4"/><path d="M5 20h14"/></svg>
+        <span class="lbl-full">Download .ics</span><span class="lbl-short">.ics</span>
+      </a>
+      <button class="btn" id="copy">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+        <span class="lbl-full">Copy feed URL</span><span class="lbl-short">URL</span>
+      </button>
     </div>
     <div class="tz" id="tzline"></div>
   </header>
 
-  <main>
+  <main class="wrap">
     <div id="calendar"></div>
   </main>
 
-  <footer>
+  <footer class="wrap">
     <p>
       Subscribe once and new concerts appear automatically. In Proton Calendar:
       <em>Other calendars &rarr; Add calendar from URL</em> and paste the feed URL.
@@ -170,29 +221,50 @@
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local';
     document.getElementById('tzline').textContent = 'Times shown in your timezone: ' + tz;
 
-    document.getElementById('copy').addEventListener('click', async () => {
-      const b = document.getElementById('copy');
+    const copyBtn = document.getElementById('copy');
+    const copyFull = copyBtn.querySelector('.lbl-full');
+    const copyShort = copyBtn.querySelector('.lbl-short');
+    copyBtn.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(feedHttps);
-        b.textContent = 'Copied';
-        setTimeout(() => (b.textContent = 'Copy feed URL'), 1500);
+        copyFull.textContent = 'Copied'; copyShort.textContent = 'Copied';
+        setTimeout(() => {
+          copyFull.textContent = 'Copy feed URL';
+          copyShort.textContent = 'URL';
+        }, 1500);
       } catch (e) { window.prompt('Copy the feed URL:', feedHttps); }
     });
 
+    // A phone gets an agenda list + a slim toolbar; a wide screen gets the grid.
+    const mobileMQ = window.matchMedia('(max-width: 640px)');
+    function layoutFor(isMobile) {
+      return isMobile
+        ? { view: 'listMonth',
+            toolbar: { left: 'prev,next', center: 'title', right: 'listMonth,dayGridMonth' } }
+        : { view: 'dayGridMonth',
+            toolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,listMonth' } };
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+      const initial = layoutFor(mobileMQ.matches);
       const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-        initialView: window.innerWidth < 700 ? 'listMonth' : 'dayGridMonth',
+        initialView: initial.view,
+        headerToolbar: initial.toolbar,
         timeZone: 'local', // render every event in the viewer's own timezone
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,listMonth',
-        },
+        buttonText: { today: 'Today', month: 'Month', week: 'Week', list: 'Agenda' },
         height: 'auto',
         eventDisplay: 'block',
+        displayEventEnd: false,
         eventSources: [{ url: './calendar.ics', format: 'ics' }],
       });
       calendar.render();
+
+      // Reconfigure only when crossing the phone/desktop breakpoint.
+      mobileMQ.addEventListener('change', (e) => {
+        const next = layoutFor(e.matches);
+        calendar.setOption('headerToolbar', next.toolbar);
+        calendar.changeView(next.view);
+      });
     });
   </script>
 </body>
