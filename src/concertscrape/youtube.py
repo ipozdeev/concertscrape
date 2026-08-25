@@ -12,6 +12,7 @@ import logging
 
 import dateutil.parser
 import googleapiclient.discovery
+from googleapiclient.errors import HttpError
 
 logger = logging.getLogger("concertscrape.youtube")
 
@@ -46,11 +47,17 @@ def _get_upcoming_livestreams_low_quota(channel_id: str, client) -> list[str]:
     for pl_ in uploads_pl:
         if not pl_:
             continue
-        response_videos = (
-            client.playlistItems()
-            .list(part="contentDetails", playlistId=pl_, maxResults=50)
-            .execute()
-        )
+        try:
+            response_videos = (
+                client.playlistItems()
+                .list(part="contentDetails", playlistId=pl_, maxResults=50)
+                .execute()
+            )
+        except HttpError as err:
+            # Some channels expose no accessible uploads playlist (e.g. it is
+            # empty or livestream-only) and return 404; skip them gracefully.
+            logger.info("uploads playlist %s unavailable: %s", pl_, err.status_code)
+            continue
         video_ids = [
             v_["contentDetails"]["videoId"] for v_ in response_videos.get("items", [])
         ]
