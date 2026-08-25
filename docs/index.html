@@ -75,13 +75,18 @@
 
     .actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: .9rem; }
     .btn {
-      display: inline-flex; align-items: center; justify-content: center;
+      display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
       padding: .58rem 1rem; border-radius: .6rem; min-height: 44px;
       border: 1px solid var(--border); background: var(--card); color: var(--fg);
       text-decoration: none; font-size: .92rem; font-weight: 500; cursor: pointer;
       transition: background .15s ease, border-color .15s ease, color .15s ease;
     }
     .btn:hover { border-color: var(--accent); color: var(--accent); }
+    /* Icons + short labels are for the compact mobile row; hidden on desktop. */
+    .btn .ico { width: 1.05em; height: 1.05em; flex: 0 0 auto; display: none;
+      fill: none; stroke: currentColor; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round; }
+    .btn .lbl-short { display: none; }
     .btn.primary {
       background: var(--accent); border-color: var(--accent); color: var(--event-text);
     }
@@ -150,9 +155,12 @@
       main { padding: 0 .8rem 2rem; }
       footer { padding: 0 1rem 2rem; }
 
-      /* Stack action buttons full-width for comfortable tapping */
-      .actions { flex-direction: column; gap: .5rem; }
-      .btn { width: 100%; padding: .8rem 1rem; font-size: .98rem; }
+      /* Three compact buttons side by side, icon + short label */
+      .actions { flex-direction: row; gap: .45rem; }
+      .btn { flex: 1 1 0; min-width: 0; padding: .5rem .3rem; font-size: .9rem; min-height: 42px; }
+      .btn .ico { display: inline-block; }
+      .btn .lbl-full { display: none; }
+      .btn .lbl-short { display: inline; }
 
       #calendar { padding: .55rem; border-radius: .6rem; }
 
@@ -176,9 +184,18 @@
     <h1 class="serif">Classical concert livestreams</h1>
     <p class="sub">Upcoming free livestreams from concert halls and orchestras worldwide, shown in <strong>your</strong> local time.</p>
     <div class="actions">
-      <a id="subscribe" class="btn primary" href="#">Subscribe in your calendar app</a>
-      <a class="btn" href="./calendar.ics" download>Download .ics</a>
-      <button class="btn" id="copy">Copy feed URL</button>
+      <a id="subscribe" class="btn primary" href="#">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="12" y1="13" x2="12" y2="18"/><line x1="9.5" y1="15.5" x2="14.5" y2="15.5"/></svg>
+        <span class="lbl-full">Subscribe in your calendar app</span><span class="lbl-short">Sub</span>
+      </a>
+      <a class="btn" href="./calendar.ics" download>
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11"/><path d="M8 11l4 4 4-4"/><path d="M5 20h14"/></svg>
+        <span class="lbl-full">Download .ics</span><span class="lbl-short">.ics</span>
+      </a>
+      <button class="btn" id="copy">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+        <span class="lbl-full">Copy feed URL</span><span class="lbl-short">URL</span>
+      </button>
     </div>
     <div class="tz" id="tzline"></div>
   </header>
@@ -205,12 +222,17 @@
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local';
     document.getElementById('tzline').textContent = 'Times shown in your timezone: ' + tz;
 
-    document.getElementById('copy').addEventListener('click', async () => {
-      const b = document.getElementById('copy');
+    const copyBtn = document.getElementById('copy');
+    const copyFull = copyBtn.querySelector('.lbl-full');
+    const copyShort = copyBtn.querySelector('.lbl-short');
+    copyBtn.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(feedHttps);
-        b.textContent = 'Copied';
-        setTimeout(() => (b.textContent = 'Copy feed URL'), 1500);
+        copyFull.textContent = 'Copied'; copyShort.textContent = 'Copied';
+        setTimeout(() => {
+          copyFull.textContent = 'Copy feed URL';
+          copyShort.textContent = 'URL';
+        }, 1500);
       } catch (e) { window.prompt('Copy the feed URL:', feedHttps); }
     });
 
