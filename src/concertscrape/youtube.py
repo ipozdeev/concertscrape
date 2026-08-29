@@ -84,10 +84,20 @@ def _get_upcoming_livestreams_low_quota(channel_id: str, client) -> list[str]:
 
 
 def _get_upcoming_livestreams_high_quota(channel_id: str, client) -> list[str]:
-    """videoIds of upcoming livestreams via search (100 quota units/channel)."""
+    """videoIds of upcoming livestreams via search (100 quota units/channel).
+
+    ``maxResults=50`` costs the same 100 units as the default 5, so request the
+    full page for better coverage.
+    """
     response = (
         client.search()
-        .list(part="id", channelId=channel_id, type="video", eventType="upcoming")
+        .list(
+            part="id",
+            channelId=channel_id,
+            type="video",
+            eventType="upcoming",
+            maxResults=50,
+        )
         .execute()
     )
     return [item["id"]["videoId"] for item in response.get("items", [])]
@@ -96,13 +106,43 @@ def _get_upcoming_livestreams_high_quota(channel_id: str, client) -> list[str]:
 def get_upcoming_livestreams(
     channel_id: str, client, low_quota: bool = True
 ) -> list[str]:
-    """videoIds of a channel's upcoming livestreams."""
+    """videoIds of a channel's upcoming livestreams (single method)."""
     fn = (
         _get_upcoming_livestreams_low_quota
         if low_quota
         else _get_upcoming_livestreams_high_quota
     )
     return fn(channel_id, client)
+
+
+def get_merged_upcoming_livestreams(channel_id: str, client) -> list[str]:
+    """Union of both discovery methods -- the uploads playlist AND search.
+
+    Neither source is complete on its own (the uploads scan misses scheduled
+    broadcasts sitting past the recent-uploads window; search is an eventually-
+    consistent index that can lag), so we merge them. Each method is isolated so
+    a failure in one (e.g. a 404 uploads playlist or a quota 403 on search) does
+    not lose the results of the other. Order is preserved, duplicates dropped.
+    """
+    ids: list[str] = []
+    seen: set[str] = set()
+    for fn, label in (
+        (_get_upcoming_livestreams_low_quota, "uploads"),
+        (_get_upcoming_livestreams_high_quota, "search"),
+    ):
+        try:
+            for vid in fn(channel_id, client):
+                if vid not in seen:
+                    seen.add(vid)
+                    ids.append(vid)
+        except HttpError as err:
+            logger.info(
+                "%s lookup unavailable for %s: %s",
+                label,
+                channel_id,
+                getattr(err, "status_code", err),
+            )
+    return ids
 
 
 def get_livestreaming_details(video_id: str, client) -> list[dict]:

@@ -23,7 +23,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from ..models import Event
-from ..youtube import get_livestreaming_details, get_upcoming_livestreams
+from ..youtube import get_livestreaming_details, get_merged_upcoming_livestreams
 
 logger = logging.getLogger("concertscrape.scrapers")
 
@@ -108,9 +108,9 @@ class YoutubeScraper(ConcertScraper):
             raise ValueError(f"unknown channel {name!r} (not in channels.json)")
         return cls(channels[key], client=client)
 
-    def get_events(self, low_quota: bool = True) -> list[Event]:
-        video_ids = get_upcoming_livestreams(
-            self.channel_id, client=self.client, low_quota=low_quota
+    def get_events(self) -> list[Event]:
+        video_ids = get_merged_upcoming_livestreams(
+            self.channel_id, client=self.client
         )
         if not video_ids:
             return []
