@@ -9,7 +9,7 @@ BEGIN:VEVENT
 SUMMARY:Concerto di Capodanno 2019
 DTSTART:20190101T164500Z
 DTEND:20190101T181500Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:665c68b97f23b865@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=7Cq6QppZWMw
 URL:https://www.youtube.com/watch?v=7Cq6QppZWMw
@@ -18,7 +18,7 @@ BEGIN:VEVENT
 SUMMARY:Schleifpunkt | Salon 1
 DTSTART:20210305T190000Z
 DTEND:20210305T203000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:b8663d787fa63b5f@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=rLBiKdwkcrU
 URL:https://www.youtube.com/watch?v=rLBiKdwkcrU
@@ -27,7 +27,7 @@ BEGIN:VEVENT
 SUMMARY:Шедевры мировой музыки
 DTSTART:20241223T130000Z
 DTEND:20241223T143000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:9189169927889323@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=iqSh5PEc5Ak
 URL:https://www.youtube.com/watch?v=iqSh5PEc5Ak
@@ -36,7 +36,7 @@ BEGIN:VEVENT
 SUMMARY:prova70
 DTSTART:20250120T155425Z
 DTEND:20250120T172425Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:7c3ce66c42855438@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=VWgihNOMZzI
 URL:https://www.youtube.com/watch?v=VWgihNOMZzI
@@ -45,7 +45,7 @@ BEGIN:VEVENT
 SUMMARY:prova70
 DTSTART:20250120T155516Z
 DTEND:20250120T172516Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:c36459db55344e2c@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=NK9fzYMEx64
 URL:https://www.youtube.com/watch?v=NK9fzYMEx64
@@ -54,7 +54,7 @@ BEGIN:VEVENT
 SUMMARY:prova70
 DTSTART:20250120T155548Z
 DTEND:20250120T172548Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:d0af7fe6b03415ac@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=Y7hVBCm53lM
 URL:https://www.youtube.com/watch?v=Y7hVBCm53lM
@@ -63,7 +63,7 @@ BEGIN:VEVENT
 SUMMARY:prova70
 DTSTART:20250120T155755Z
 DTEND:20250120T172755Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:4fa6fbdb078bcdd6@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=WV2kICdUgio
 URL:https://www.youtube.com/watch?v=WV2kICdUgio
@@ -72,7 +72,7 @@ BEGIN:VEVENT
 SUMMARY:Орган LIVE. Букстехуде
 DTSTART:20250915T120000Z
 DTEND:20250915T133000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:877b78998f37ec2e@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=clvKhf-D7Uc
 URL:https://www.youtube.com/watch?v=clvKhf-D7Uc
@@ -81,36 +81,57 @@ BEGIN:VEVENT
 SUMMARY:Орган LIVE. Поговори с гобоем
 DTSTART:20260406T120000Z
 DTEND:20260406T133000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:d836dee7fd3aa7e4@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=abLwX3Zh6Es
 URL:https://www.youtube.com/watch?v=abLwX3Zh6Es
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Parvis Hejazi (piano) @St. Mary's Perivale
-DTSTART:20261027T140000Z
-DTEND:20261027T153000Z
-DTSTAMP:20261027T115150Z
-UID:0b0fadb1fd1bafaf@concertscrape
-DESCRIPTION:https://www.youtube.com/@stmarysperivale2842
-URL:https://www.youtube.com/@stmarysperivale2842
+SUMMARY:17º Laboratório de Regência | Sinfonia nº 5\, de Tchaikovsky
+DTSTART:20261028T233000Z
+DTEND:20261029T010000Z
+DTSTAMP:20261029T123545Z
+UID:33d49eac3c92b428@concertscrape
+DESCRIPTION:https://www.youtube.com/watch?v=Swohoi7RBVc
+URL:https://www.youtube.com/watch?v=Swohoi7RBVc
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:LIVE: Хибла Герзмава (сопрано)\, Екатер
+ ина Ганелина (фортепиано) | Hibla Gerzmava\, Ekaterin
+ a Ganelina
+DTSTART:20261029T160000Z
+DTEND:20261029T173000Z
+DTSTAMP:20261029T123545Z
+UID:d274c48268474df3@concertscrape
+DESCRIPTION:https://www.youtube.com/watch?v=AEHPE9O-j9U
+URL:https://www.youtube.com/watch?v=AEHPE9O-j9U
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Augusta Holmès - Andromède. Sinfonische Dichtung | Marie Jacquot
   | WDR Sinfonieorchester
 DTSTART:20261030T150000Z
 DTEND:20261030T163000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:b31796c07101344c@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=jTqB1nvxGzE
 URL:https://www.youtube.com/watch?v=jTqB1nvxGzE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Heinrich Biber: Battalia à 10 in D major\, C. 61 - Alexandra Conu
+ nova
+DTSTART:20261030T170000Z
+DTEND:20261030T183000Z
+DTSTAMP:20261029T123545Z
+UID:7f66b9d1b6bdd492@concertscrape
+DESCRIPTION:https://www.youtube.com/watch?v=4dZdTcvSyjw
+URL:https://www.youtube.com/watch?v=4dZdTcvSyjw
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:LIVE: SWR Big Band meets SWR Symphonieorchester | Dominik Beykirch
   | Frank Dupree Trio
 DTSTART:20261030T190000Z
 DTEND:20261030T203000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:45ce691510058efc@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=N6_DDx7g9eA
 URL:https://www.youtube.com/watch?v=N6_DDx7g9eA
@@ -119,17 +140,26 @@ BEGIN:VEVENT
 SUMMARY:Concerto digital: ¡Viva España!
 DTSTART:20261031T193000Z
 DTEND:20261031T210000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:38679715e3ac8066@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=zodHvHl92U0
 URL:https://www.youtube.com/watch?v=zodHvHl92U0
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:The Karelia String Quartet @St. Mary's Perivale
+DTSTART:20261101T150000Z
+DTEND:20261101T163000Z
+DTSTAMP:20261029T123545Z
+UID:0b0fadb1fd1bafaf@concertscrape
+DESCRIPTION:https://www.youtube.com/@stmarysperivale2842
+URL:https://www.youtube.com/@stmarysperivale2842
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Hannes Minnaar | Shostakovich Preludes and Fugues - Live from Wigm
  ore Hall
 DTSTART:20261103T200000Z
 DTEND:20261103T213000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:8300c6ed27a0f4a4@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=mtUs8vp-FKA
 URL:https://www.youtube.com/watch?v=mtUs8vp-FKA
@@ -138,7 +168,7 @@ BEGIN:VEVENT
 SUMMARY:Both Sides Now (Joni Mitchell) / Chanticleer\, a cappella choir
 DTSTART:20261105T180000Z
 DTEND:20261105T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:6b74926ac37d4aed@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=H30ec-Bgh04
 URL:https://www.youtube.com/watch?v=H30ec-Bgh04
@@ -148,7 +178,7 @@ SUMMARY:LIVE: Britten\, Schumann\, Tschaikowsky | Gražinytė | Gražinyt
  ė-Tyla | NDR Radiophilharmonie
 DTSTART:20261106T180000Z
 DTEND:20261106T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:a96c5401b331e3af@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=PyM2c99yctc
 URL:https://www.youtube.com/watch?v=PyM2c99yctc
@@ -158,7 +188,7 @@ SUMMARY:LIVE STREAM | 80th Concours de Genève - Opening Concert (Kevin Ch
  en\, Michiaki Ueno)
 DTSTART:20261106T181500Z
 DTEND:20261106T194500Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:55c6b6127d2e717a@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=M7u66I49pPg
 URL:https://www.youtube.com/watch?v=M7u66I49pPg
@@ -167,7 +197,7 @@ BEGIN:VEVENT
 SUMMARY:LIVE: Ganz großes Kino I WDR Funkhausorchester
 DTSTART:20261106T190000Z
 DTEND:20261106T203000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:d0a2b8a437934bc3@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=LojqeVHRWco
 URL:https://www.youtube.com/watch?v=LojqeVHRWco
@@ -176,7 +206,7 @@ BEGIN:VEVENT
 SUMMARY:LIVE STREAM | 80th Concours de Genève - Semi-final 1 - Session 1
 DTSTART:20261107T131500Z
 DTEND:20261107T144500Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:e056ccbc5d942f80@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=PvCw9Swk_88
 URL:https://www.youtube.com/watch?v=PvCw9Swk_88
@@ -185,7 +215,7 @@ BEGIN:VEVENT
 SUMMARY:LIVE STREAM | 80th Concours de Genève - Semi-Final 1\, Session 2
 DTSTART:20261107T181500Z
 DTEND:20261107T194500Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:c241b4e9874b6977@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=wDMvy94oRjk
 URL:https://www.youtube.com/watch?v=wDMvy94oRjk
@@ -194,7 +224,7 @@ BEGIN:VEVENT
 SUMMARY:LIVE STREAM | 80th Concours de Genève - Semi-Final 2 - Session 1
 DTSTART:20261108T131500Z
 DTEND:20261108T144500Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:b37a756043ae5217@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=56lyRIw3OKw
 URL:https://www.youtube.com/watch?v=56lyRIw3OKw
@@ -203,7 +233,7 @@ BEGIN:VEVENT
 SUMMARY:LIVE STREAM | 80th Concours de Genève - Semi-Final 2 - Session 2
 DTSTART:20261108T181500Z
 DTEND:20261108T194500Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:e870c6a8b8e9d792@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=J_5mfPxkzOk
 URL:https://www.youtube.com/watch?v=J_5mfPxkzOk
@@ -212,7 +242,7 @@ BEGIN:VEVENT
 SUMMARY:Joseph Lin\, violin/viola & Friends — LIVE
 DTSTART:20261108T190000Z
 DTEND:20261108T203000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:853cae4e70ac9aa9@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=yhiaU2TKtM8
 URL:https://www.youtube.com/watch?v=yhiaU2TKtM8
@@ -221,7 +251,7 @@ BEGIN:VEVENT
 SUMMARY:LIVE STREAM | 80th Concours de Genève - Semi-Final 3\, Session 1
 DTSTART:20261109T131500Z
 DTEND:20261109T144500Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:2bc2ab56653f9ad7@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=3RibwYMfEbI
 URL:https://www.youtube.com/watch?v=3RibwYMfEbI
@@ -230,7 +260,7 @@ BEGIN:VEVENT
 SUMMARY:LIVE STREAM | 80th Concours de Genève - Semi-Final\, Session 2
 DTSTART:20261109T181500Z
 DTEND:20261109T194500Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:154266dbc3e03c87@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=9g1IaOerddY
 URL:https://www.youtube.com/watch?v=9g1IaOerddY
@@ -239,7 +269,7 @@ BEGIN:VEVENT
 SUMMARY:Raphaël Feuillâtre\, guitar — LIVE
 DTSTART:20261112T003000Z
 DTEND:20261112T020000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:539ab8d93e377e68@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=A0rn6GzI_pk
 URL:https://www.youtube.com/watch?v=A0rn6GzI_pk
@@ -249,7 +279,7 @@ SUMMARY:Wade in the Water (arr. Stephen M. Murphy) / Chanticleer\, a cappe
  lla choir
 DTSTART:20261112T180000Z
 DTEND:20261112T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:995d781d581bfc0c@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=U8_3TGYtJoM
 URL:https://www.youtube.com/watch?v=U8_3TGYtJoM
@@ -259,7 +289,7 @@ SUMMARY:Nicolas Namoradze | Bach\, Beethoven and Ravel - Live from Wigmore
   Hall
 DTSTART:20261112T200000Z
 DTEND:20261112T213000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:546ab36e0511fb6b@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=9v9mm1pJiSA
 URL:https://www.youtube.com/watch?v=9v9mm1pJiSA
@@ -269,7 +299,7 @@ SUMMARY:Frankfurt Radio Symphony LIVE: Beatrice Rana & Elim Chan with Brah
  ms & Bartók
 DTSTART:20261113T190000Z
 DTEND:20261113T203000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:37a84248e07ed1ea@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=3-8YUqWEMuM
 URL:https://www.youtube.com/watch?v=3-8YUqWEMuM
@@ -278,7 +308,7 @@ BEGIN:VEVENT
 SUMMARY:LIVE: Stabat Mater: Von Trauer und Hoffnung | WDR Rundfunkchor
 DTSTART:20261113T190000Z
 DTEND:20261113T203000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:565e0a69d8975c5a@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=QQvlWm685Fg
 URL:https://www.youtube.com/watch?v=QQvlWm685Fg
@@ -287,7 +317,7 @@ BEGIN:VEVENT
 SUMMARY:LIVE: Grenzgänge - Poga & Prokofjew | WDR Sinfonieorchester
 DTSTART:20261114T190000Z
 DTEND:20261114T203000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:c7414d03de67bf44@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=FkHFkWWIBzk
 URL:https://www.youtube.com/watch?v=FkHFkWWIBzk
@@ -297,17 +327,27 @@ SUMMARY:Brahmam Okkate (బ్రహ్మమొక్కటే) / Annamac
  harya / Chanticleer\, a cappella choir
 DTSTART:20261119T180000Z
 DTEND:20261119T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:63bc6e08d9d06d24@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=JANs64oZf8s
 URL:https://www.youtube.com/watch?v=JANs64oZf8s
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Masterclass with Sir Bryn Terfel | Music and Ideas | Melbourne Sym
+ phony Orchestra
+DTSTART:20261120T073000Z
+DTEND:20261120T090000Z
+DTSTAMP:20261029T123545Z
+UID:d389c6e8706d1dd5@concertscrape
+DESCRIPTION:https://www.youtube.com/watch?v=p79dENWPf9U
+URL:https://www.youtube.com/watch?v=p79dENWPf9U
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Kronberg Academy | J. Rhee\, S. Larivère\, L. Coetzee | Andrés O
  rozco-Estrada | Gürzenich-Orchester|
 DTSTART:20261120T180000Z
 DTEND:20261120T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:209657680191329e@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=ORb0xcjCQxo
 URL:https://www.youtube.com/watch?v=ORb0xcjCQxo
@@ -317,7 +357,7 @@ SUMMARY:Francesca Dego and Francesca Leonardi | Berio\, Debussy\, Ravel an
  d more - Live from Wigmore Hall
 DTSTART:20261120T200000Z
 DTEND:20261120T213000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:d153f94ad30bc172@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=bLu1xT7-DWs
 URL:https://www.youtube.com/watch?v=bLu1xT7-DWs
@@ -326,7 +366,7 @@ BEGIN:VEVENT
 SUMMARY:Marina Piccinini\, flute & Justin Taylor\, harpsichord — LIVE
 DTSTART:20261125T003000Z
 DTEND:20261125T020000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:dfb3f70adf1b2ab0@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=HJI3ykNKE9Q
 URL:https://www.youtube.com/watch?v=HJI3ykNKE9Q
@@ -335,16 +375,26 @@ BEGIN:VEVENT
 SUMMARY:Shenandoah (arr. James Erb) / Chanticleer\, a cappella choir
 DTSTART:20261126T180000Z
 DTEND:20261126T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:6fd149ae73276d98@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=-LqNaksemOo
 URL:https://www.youtube.com/watch?v=-LqNaksemOo
 END:VEVENT
 BEGIN:VEVENT
+SUMMARY:Frankfurt Radio Symphony LIVE: Clara-Jumi Kang & Eva Ollikainen wi
+ th Beethoven & Sibelius
+DTSTART:20261127T190000Z
+DTEND:20261127T203000Z
+DTSTAMP:20261029T123545Z
+UID:b0c4610b0140ab93@concertscrape
+DESCRIPTION:https://www.youtube.com/watch?v=e64j_WiKzP8
+URL:https://www.youtube.com/watch?v=e64j_WiKzP8
+END:VEVENT
+BEGIN:VEVENT
 SUMMARY:LIVE: Monumental - Wagner & Bruckner | WDR Sinfonieorchester
 DTSTART:20261128T190000Z
 DTEND:20261128T203000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:ce9515f67123549f@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=HCqwE_o91Tc
 URL:https://www.youtube.com/watch?v=HCqwE_o91Tc
@@ -353,7 +403,7 @@ BEGIN:VEVENT
 SUMMARY:Amanda Lynn Bottoms\, mezzo & Eunjoo Jeon\, piano — LIVE
 DTSTART:20261202T003000Z
 DTEND:20261202T020000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:70bc42f734633b36@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=NxfLkZ5UeEY
 URL:https://www.youtube.com/watch?v=NxfLkZ5UeEY
@@ -362,7 +412,7 @@ BEGIN:VEVENT
 SUMMARY:Majel Connery: I Am a Cloud / Chanticleer\, a cappella choir
 DTSTART:20261203T180000Z
 DTEND:20261203T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:d13f67b59d0ede73@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=NSfm9MN9DUU
 URL:https://www.youtube.com/watch?v=NSfm9MN9DUU
@@ -372,7 +422,7 @@ SUMMARY:O/Modernt Chamber Orchestra and friends | Britten and Nico Muhly -
   Live from Wigmore Hall
 DTSTART:20261203T200000Z
 DTEND:20261203T213000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:408bfd4537a43eed@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=FN18AAy4-c8
 URL:https://www.youtube.com/watch?v=FN18AAy4-c8
@@ -382,7 +432,7 @@ SUMMARY:Leonkoro Quartet and Zeb Soanes | Britten and Purcell - Live from
  Wigmore Hall
 DTSTART:20261204T200000Z
 DTEND:20261204T213000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:02f01ede7c12ae10@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=7JNfT6Dd2UM
 URL:https://www.youtube.com/watch?v=7JNfT6Dd2UM
@@ -392,7 +442,7 @@ SUMMARY:LIVE: Halleluja - Händels Messias | WDR Sinfonieorchester | WDR R
  undfunkchor
 DTSTART:20261205T180000Z
 DTEND:20261205T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:5af13ab5ac083ee6@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=fe64B-wBg-U
 URL:https://www.youtube.com/watch?v=fe64B-wBg-U
@@ -402,7 +452,7 @@ SUMMARY:Virgil Thomson: My Shepherd Will Supply My Need / Chanticleer\, a
  cappella choir
 DTSTART:20261210T180000Z
 DTEND:20261210T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:feafae5f4ca95e79@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=mFipmEkteL4
 URL:https://www.youtube.com/watch?v=mFipmEkteL4
@@ -411,7 +461,7 @@ BEGIN:VEVENT
 SUMMARY:LIVE: Abenteurer - Măcelaru & Strauss | WDR Sinfonieorchester
 DTSTART:20261212T190000Z
 DTEND:20261212T203000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:0b5784aea74f45ff@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=pJhQwn9I1aw
 URL:https://www.youtube.com/watch?v=pJhQwn9I1aw
@@ -420,7 +470,7 @@ BEGIN:VEVENT
 SUMMARY:Byrd: Sing Joyfully unto God / Chanticleer\, a cappella choir
 DTSTART:20261217T180000Z
 DTEND:20261217T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:7e1be74f63d23ffe@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=dxGUScJh-Ps
 URL:https://www.youtube.com/watch?v=dxGUScJh-Ps
@@ -430,7 +480,7 @@ SUMMARY:Machaut: Gloria from Messe de Nostre Dame / Chanticleer\, a cappel
  la choir
 DTSTART:20261224T180000Z
 DTEND:20261224T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:de5cdf52b87d1f38@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=HJ_L-3UwroE
 URL:https://www.youtube.com/watch?v=HJ_L-3UwroE
@@ -440,7 +490,7 @@ SUMMARY:LIVE: Silvesterkonzert - Rosenkavalier & Nussknacker | WDR Sinfoni
  eorchester
 DTSTART:20261231T170000Z
 DTEND:20261231T183000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:d535d946f4e420dd@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=DRBYHrG57R0
 URL:https://www.youtube.com/watch?v=DRBYHrG57R0
@@ -449,7 +499,7 @@ BEGIN:VEVENT
 SUMMARY:Clara Neubauer\, violin & Oliver Neubauer\, violin — LIVE
 DTSTART:20270109T003000Z
 DTEND:20270109T020000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:c4ae1776066cd7f5@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=KhukRjl3bFA
 URL:https://www.youtube.com/watch?v=KhukRjl3bFA
@@ -459,7 +509,7 @@ SUMMARY:Geneva Lewis\, violin\; Jay Campbell\, cello\; & Jonathan Cohen\,
  harpsichord— LIVE
 DTSTART:20270123T003000Z
 DTEND:20270123T020000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:0bee4ffa83955515@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=nTmN3ubL4oQ
 URL:https://www.youtube.com/watch?v=nTmN3ubL4oQ
@@ -468,7 +518,7 @@ BEGIN:VEVENT
 SUMMARY:Kim Kashkashian\, viola & Friends — LIVE
 DTSTART:20270207T190000Z
 DTEND:20270207T203000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:b1593dec025ffd0b@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=DQmLE5u2liI
 URL:https://www.youtube.com/watch?v=DQmLE5u2liI
@@ -477,7 +527,7 @@ BEGIN:VEVENT
 SUMMARY:Maria Ioudenitch\, violin & Sahun Sam Hong\, piano — LIVE
 DTSTART:20270221T190000Z
 DTEND:20270221T203000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:707aa4f44854b5fb@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=njdCNiYj98A
 URL:https://www.youtube.com/watch?v=njdCNiYj98A
@@ -487,7 +537,7 @@ SUMMARY:Nicholas Phan\, tenor\; Tai Murray\, violin\; Karen Ouzounian\, ce
  llo\; & Myra Huang\, piano — LIVE
 DTSTART:20270227T003000Z
 DTEND:20270227T020000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:3fb224e799cc7620@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=XWYt-_raAmc
 URL:https://www.youtube.com/watch?v=XWYt-_raAmc
@@ -496,7 +546,7 @@ BEGIN:VEVENT
 SUMMARY:Kobi Malkin\, violin & Shai Wosner\, piano — LIVE
 DTSTART:20270304T003000Z
 DTEND:20270304T020000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:18dbb8f0c5fe8fad@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=PexSb0-Vx8o
 URL:https://www.youtube.com/watch?v=PexSb0-Vx8o
@@ -505,7 +555,7 @@ BEGIN:VEVENT
 SUMMARY:Musicians from Marlboro II — LIVE
 DTSTART:20270316T233000Z
 DTEND:20270317T010000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:45bf7b0ef02ee508@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=MySjQSyiG_A
 URL:https://www.youtube.com/watch?v=MySjQSyiG_A
@@ -515,7 +565,7 @@ SUMMARY:Elissa Lee Koljonen\, violin\; Roberto Díaz\, viola\; Yumi Kendal
  l\, cello\; & Ying Li\, piano — LIVE
 DTSTART:20270321T180000Z
 DTEND:20270321T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:44ecdba74db16f9f@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=FTD0q3mg_9I
 URL:https://www.youtube.com/watch?v=FTD0q3mg_9I
@@ -524,7 +574,7 @@ BEGIN:VEVENT
 SUMMARY:Elizabeth Masoudnia\, english horn & Friends — LIVE
 DTSTART:20270412T233000Z
 DTEND:20270413T010000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:404b133f65d49fc0@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=-IZVYoDenw4
 URL:https://www.youtube.com/watch?v=-IZVYoDenw4
@@ -533,7 +583,7 @@ BEGIN:VEVENT
 SUMMARY:Musicians from Marlboro III — LIVE
 DTSTART:20270504T233000Z
 DTEND:20270505T010000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:be3c71bcb95c4e79@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=f9FP0pTDF0Q
 URL:https://www.youtube.com/watch?v=f9FP0pTDF0Q
@@ -542,7 +592,7 @@ BEGIN:VEVENT
 SUMMARY:Lucy Fitz Gibbon\, soprano & Alexi Kenney\, violin — LIVE
 DTSTART:20270516T180000Z
 DTEND:20270516T193000Z
-DTSTAMP:20261027T115150Z
+DTSTAMP:20261029T123545Z
 UID:a0ef42202e57cf13@concertscrape
 DESCRIPTION:https://www.youtube.com/watch?v=OepfT11ilUc
 URL:https://www.youtube.com/watch?v=OepfT11ilUc
